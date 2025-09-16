@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Clientes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='clientes.css') }}">
+</head>
+<body>
+    <header class="header">
+        <h1>Tus clientes</h1>
+        <nav>
+            <a href="{{ url_for('dashboard') }}">Inicio</a>
+            <a href="{{ url_for('clientes') }}">Clientes</a>
+            <a href="{{ url_for('productos') }}">Productos</a>
+            <a href="{{ url_for('pedidos') }}">Pedidos</a>
+            <a href="{{ url_for('login') }}">Cerrar sesión</a>
+        </nav>
+    </header>
+    <h1>Clientes de {{ session['usuario'] }}</h1>
+
+    <form method="POST">
+        <input type="text" name="nombre" placeholder="Nombre completo" required>
+        <input type="text" name="dni" placeholder="DNI">
+        <input type="email" name="email" placeholder="Email">
+        <input type="text" name="telefono" placeholder="Teléfono">
+        <input type="text" name="direccion" placeholder="Dirección">
+        <textarea name="observaciones" placeholder="Observaciones"></textarea>
+        <button type="submit">Agregar cliente</button>
+    </form>
+
+    <h2>Listado de clientes</h2>
+    <table>
+        <tr>
+            <th>Nombre</th><th>DNI</th><th>Email</th><th>Teléfono</th><th>Dirección</th><th>Observaciones</th>
+        </tr>
+        {% for cliente in clientes %}
+        <tr>
+            <td>{{ cliente.nombre_cliente }}</td>
+            <td>{{ cliente.dni }}</td>
+            <td>{{ cliente.email }}</td>
+            <td>{{ cliente.telefono }}</td>
+            <td>{{ cliente.direccion }}</td>
+            <td>{{ cliente.observaciones }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

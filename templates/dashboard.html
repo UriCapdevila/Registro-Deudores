@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Principal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body>
+    <header class="header">
+        <h1>Bienvenido, {{ usuario }}</h1>
+        <nav>
+            <a href="{{ url_for('clientes') }}">Clientes</a>
+            <a href="{{ url_for('productos') }}">Productos</a>
+            <a href="{{ url_for('pedidos') }}">Pedidos</a>
+            <a href="{{ url_for('login') }}">Cerrar sesión</a>
+        </nav>
+    </header>
+
+    <main class="main-panel">
+        <section class="card">
+            <h2>Total de clientes</h2>
+            <p>42</p>
+        </section>
+        <section class="card">
+            <h2>Total de productos</h2>
+            <p>17</p>
+        </section>
+        <section class="card">
+            <h2>Pedidos activos</h2>
+            <p>5</p>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 Uriel | Burzaco, Buenos Aires</p>
+    </footer>
+</body>
+</html>

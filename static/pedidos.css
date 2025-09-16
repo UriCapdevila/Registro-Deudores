@@ -1,0 +1,105 @@
+/* Estilo base */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 2rem;
+    background-color: #f4f6f8;
+    color: #333;
+}
+
+/* Título */
+h1, h2 {
+    text-align: center;
+    color: #0078D4;
+}
+
+/* Formulario */
+form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    max-width: 800px;
+    margin: 2rem auto;
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+form textarea {
+    grid-column: span 2;
+    resize: vertical;
+}
+
+input, select, textarea, button {
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+button {
+    grid-column: span 2;
+    background-color: #0078D4;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #005fa3;
+}
+
+/* Tabla de pedidos */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+th, td {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #e8f0fe;
+    color: #333;
+}
+
+/* Colores por estado */
+td.estado {
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+td.estado.pendiente {
+    color: #f39c12;
+}
+
+td.estado.pagado {
+    color: #27ae60;
+}
+
+td.estado.vencido {
+    color: #e74c3c;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    form {
+        grid-template-columns: 1fr;
+    }
+
+    form textarea, button {
+        grid-column: span 1;
+    }
+
+    table, th, td {
+        font-size: 0.9rem;
+    }
+}
