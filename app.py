@@ -152,5 +152,39 @@ def pedidos():
 
     return render_template('pedidos.html', pedidos=lista_pedidos, clientes=clientes)
 
+@app.route('/editar_cliente/<int:id>', methods=['GET', 'POST'])
+def editar_cliente(id):
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+
+    cursor = db.cursor(dictionary=True)
+
+    # Obtener datos del cliente
+    cursor.execute("SELECT * FROM clientes WHERE id_cliente = %s", (id,))
+    cliente = cursor.fetchone()
+
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        dni = request.form['dni']
+        email = request.form['email']
+        telefono = request.form['telefono']
+        direccion = request.form['direccion']
+        observaciones = request.form['observaciones']
+
+        cursor.execute("""
+            UPDATE clientes SET 
+                nombre_cliente = %s,
+                dni = %s,
+                email = %s,
+                telefono = %s,
+                direccion = %s,
+                observaciones = %s
+            WHERE id_cliente = %s
+        """, (nombre, dni, email, telefono, direccion, observaciones, id))
+        db.commit()
+        return redirect(url_for('clientes'))
+
+    return render_template('editar_cliente.html', cliente=cliente)
+
 if __name__ == '__main__':
     app.run(debug=True)

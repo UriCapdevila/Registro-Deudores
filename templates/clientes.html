@@ -41,8 +41,13 @@
             <td>{{ cliente.telefono }}</td>
             <td>{{ cliente.direccion }}</td>
             <td>{{ cliente.observaciones }}</td>
+            <td><a href="{{ url_for('editar_cliente', id=cliente.id_cliente) }}">Editar</a></td>
         </tr>
         {% endfor %}
     </table>
+
+    <footer class="footer">
+        <p>© 2025 Uriel | Burzaco, Buenos Aires</p>
+    </footer>
 </body>
 </html>

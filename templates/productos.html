@@ -7,7 +7,7 @@
 </head>
 <body>
         <header class="header">
-        <h1>Bienvenido, {{ usuario }}</h1>
+        <h1>Tus productos</h1>
         <nav>
             <a href="{{ url_for('dashboard') }}">Inicio</a>
             <a href="{{ url_for('clientes') }}">Clientes</a>
@@ -42,5 +42,9 @@
         </tr>
         {% endfor %}
     </table>
+
+    <footer class="footer">
+        <p>© 2025 Uriel | Burzaco, Buenos Aires</p>
+    </footer>
 </body>
 </html>

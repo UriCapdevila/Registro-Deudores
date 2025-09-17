@@ -6,6 +6,15 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='pedidos.css') }}">
 </head>
 <body>
+    <header class="header">
+        <h1>Bienvenido, {{ usuario }}</h1>
+        <nav>
+            <a href="{{ url_for('clientes') }}">Clientes</a>
+            <a href="{{ url_for('productos') }}">Productos</a>
+            <a href="{{ url_for('pedidos') }}">Pedidos</a>
+            <a href="{{ url_for('login') }}">Cerrar sesión</a>
+        </nav>
+    </header>
     <h1>Pedidos de {{ session['usuario'] }}</h1>
 
     <form method="POST">
@@ -41,5 +50,9 @@
         </tr>
         {% endfor %}
     </table>
+
+    <footer class="footer">
+        <p>© 2025 Uriel | Burzaco, Buenos Aires</p>
+    </footer>
 </body>
 </html>
