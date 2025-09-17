@@ -186,5 +186,67 @@ def editar_cliente(id):
 
     return render_template('editar_cliente.html', cliente=cliente)
 
+@app.route('/editar_producto/<int:id>', methods=['GET', 'POST'])
+def editar_producto(id):
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+
+    cursor = db.cursor(dictionary=True)
+
+    # Obtener datos del producto
+    cursor.execute("SELECT * FROM productos WHERE id_producto = %s", (id,))
+    producto = cursor.fetchone()
+
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        precio = request.form['precio']
+        categoria = request.form['categoria']
+        stock = request.form['stock']
+        descripcion = request.form['descripcion']
+
+        cursor.execute("""
+            UPDATE productos SET 
+                nombre_producto = %s,
+                precio = %s,
+                categoria = %s,
+                stock = %s,
+                descripcion = %s
+            WHERE id_producto = %s
+        """, (nombre, precio, categoria, stock, descripcion, id))
+        db.commit()
+        return redirect(url_for('productos'))
+
+    return render_template('editar_producto.html', producto=producto)
+
+@app.route('/editar_pedido/<int:id>', methods=['GET', 'POST'])
+def editar_pedido(id):
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+
+    cursor = db.cursor(dictionary=True)
+
+    # Obtener datos del pedido
+    cursor.execute("SELECT * FROM pedidos WHERE id_pedido = %s", (id,))
+    pedido = cursor.fetchone()
+
+    if request.method == 'POST':
+        fecha = request.form['fecha']
+        estado = request.form['estado']
+        monto_total = request.form['monto_total']
+        observaciones = request.form['observaciones']
+
+        cursor.execute("""
+            UPDATE pedidos SET 
+                fecha = %s,
+                estado = %s,
+                monto_total = %s,
+                observaciones = %s
+            WHERE id_pedido = %s
+        """, (fecha, estado, monto_total, observaciones, id))
+        db.commit()
+        return redirect(url_for('pedidos'))
+
+    return render_template('editar_pedido.html', pedido=pedido)
+
 if __name__ == '__main__':
     app.run(debug=True)

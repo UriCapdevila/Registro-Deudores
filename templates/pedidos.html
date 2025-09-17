@@ -47,6 +47,7 @@
             <td>{{ pedido.estado }}</td>
             <td>${{ pedido.monto_total }}</td>
             <td>{{ pedido.observaciones }}</td><td class="estado {{ pedido.estado }}">{{ pedido.estado }}</td>
+            <td><a href="{{ url_for('editar_pedido', id=pedido.id_pedido) }}">Editar</a></td>
         </tr>
         {% endfor %}
     </table>
