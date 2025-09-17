@@ -186,6 +186,16 @@ def editar_cliente(id):
 
     return render_template('editar_cliente.html', cliente=cliente)
 
+@app.route('/eliminar_cliente/<int:id>', methods=['POST'])
+def eliminar_cliente(id):
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM clientes WHERE id_cliente = %s", (id,))
+    db.commit()
+    return redirect(url_for('clientes'))
+
 @app.route('/editar_producto/<int:id>', methods=['GET', 'POST'])
 def editar_producto(id):
     if 'usuario' not in session:
@@ -218,6 +228,16 @@ def editar_producto(id):
 
     return render_template('editar_producto.html', producto=producto)
 
+@app.route('/eliminar_producto/<int:id>', methods=['POST'])
+def eliminar_producto(id):
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM productos WHERE id_producto = %s", (id,))
+    db.commit()
+    return redirect(url_for('productos'))
+
 @app.route('/editar_pedido/<int:id>', methods=['GET', 'POST'])
 def editar_pedido(id):
     if 'usuario' not in session:
@@ -247,6 +267,16 @@ def editar_pedido(id):
         return redirect(url_for('pedidos'))
 
     return render_template('editar_pedido.html', pedido=pedido)
+
+@app.route('/eliminar_pedido/<int:id>', methods=['POST'])
+def eliminar_pedido(id):
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM pedidos WHERE id_pedido = %s", (id,))
+    db.commit()
+    return redirect(url_for('pedidos'))
 
 if __name__ == '__main__':
     app.run(debug=True)
