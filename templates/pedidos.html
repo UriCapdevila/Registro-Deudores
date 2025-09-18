@@ -7,7 +7,7 @@
 </head>
 <body>
     <header class="header">
-        <h1>Bienvenido, {{ usuario }}</h1>
+        <h1>Bienvenido, {{ session['usuario'] }}</h1>
         <nav>
             <a href="{{ url_for('clientes') }}">Clientes</a>
             <a href="{{ url_for('productos') }}">Productos</a>
@@ -38,21 +38,29 @@
     <h2>Listado de pedidos</h2>
     <table>
         <tr>
-            <th>Cliente</th><th>Fecha</th><th>Estado</th><th>Monto</th><th>Observaciones</th>
+            <th>Cliente</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Monto</th>
+            <th>Observaciones</th>
+            <th>Editar</th>
+            <th>Eliminar</th>
         </tr>
-        {% for pedido in pedidos %}
-        <tr>
-            <td>{{ pedido.nombre_cliente }}</td>
-            <td>{{ pedido.fecha }}</td>
-            <td>{{ pedido.estado }}</td>
-            <td>${{ pedido.monto_total }}</td>
-            <td>{{ pedido.observaciones }}</td><td class="estado {{ pedido.estado }}">{{ pedido.estado }}</td>
-            <td><a href="{{ url_for('editar_pedido', id=pedido.id_pedido) }}">Editar</a></td>
-            <td><form method="POST" action="{{ url_for('eliminar_pedido', id=pedido.id_pedido) }}" onsubmit="return confirm('¿Eliminar este pedido?');">
-    <button type="submit" class="btn-eliminar">Eliminar</button>
-</form></td>
-        </tr>
-        {% endfor %}
+{% for pedido in pedidos %}
+<tr>
+    <td>{{ pedido.nombre_cliente }}</td>
+    <td>{{ pedido.fecha }}</td>
+    <td class="estado {{ pedido.estado }}">{{ pedido.estado }}</td>
+    <td>${{ pedido.monto_total }}</td>
+    <td>{{ pedido.observaciones }}</td>
+    <td><a href="{{ url_for('editar_pedido', id=pedido.id_pedido) }}">Editar</a></td>
+    <td>
+        <form method="POST" action="{{ url_for('eliminar_pedido', id=pedido.id_pedido) }}" onsubmit="return confirm('¿Eliminar este pedido?');">
+            <button type="submit" class="btn-eliminar">Eliminar</button>
+        </form>
+    </td>
+</tr>
+{% endfor %}
     </table>
 
     <footer class="footer">

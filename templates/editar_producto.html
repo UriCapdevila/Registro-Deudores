@@ -20,13 +20,17 @@
         <input type="text" id="nombre" name="nombre" value="{{ producto.nombre_producto }}" required>
 
         <label for="precio">Precio</label>
-        <input type="number" step="0.01" id="precio" name="precio" value="{{ producto.precio }}" required>
+        <input type="number" step="0.01" min="0" id="precio" name="precio" value="{{ producto.precio }}" required>
 
         <label for="categoria">Categoría</label>
-        <input type="text" id="categoria" name="categoria" value="{{ producto.categoria }}">
+        <select id="categoria" name="categoria" required>
+            {% for categoria in categorias %}
+                <option value="{{ categoria }}" {% if producto.categoria == categoria %}selected{% endif %}>{{ categoria }}</option>
+            {% endfor %}
+        </select>
 
         <label for="stock">Stock disponible</label>
-        <input type="number" id="stock" name="stock" value="{{ producto.stock }}">
+        <input type="number" id="stock" name="stock" value="{{ producto.stock }}" min="0">
 
         <label for="descripcion">Descripción</label>
         <textarea id="descripcion" name="descripcion">{{ producto.descripcion }}</textarea>

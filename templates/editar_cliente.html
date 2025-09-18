@@ -15,24 +15,25 @@
         </nav>
     </div>
 
+    <!-- El atributo action se omite para enviar el formulario a la URL actual -->
     <form method="POST">
         <label for="nombre">Nombre completo</label>
         <input type="text" id="nombre" name="nombre" value="{{ cliente.nombre_cliente }}" required>
 
         <label for="dni">DNI</label>
-        <input type="text" id="dni" name="dni" value="{{ cliente.dni }}">
+        <input type="text" id="dni" name="dni" value="{{ cliente.dni }}" maxlength="15">
 
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" value="{{ cliente.email }}">
+        <input type="email" id="email" name="email" value="{{ cliente.email }}" maxlength="254">
 
         <label for="telefono">Teléfono</label>
-        <input type="text" id="telefono" name="telefono" value="{{ cliente.telefono }}">
+        <input type="text" id="telefono" name="telefono" value="{{ cliente.telefono }}" pattern="[0-9]{7,15}" maxlength="15" title="Ingrese un número de teléfono válido (7-15 dígitos)">
 
         <label for="direccion">Dirección</label>
         <input type="text" id="direccion" name="direccion" value="{{ cliente.direccion }}">
 
         <label for="observaciones">Observaciones</label>
-        <textarea id="observaciones" name="observaciones">{{ cliente.observaciones }}</textarea>
+        <textarea id="observaciones" name="observaciones" maxlength="500">{{ cliente.observaciones }}</textarea>
 
         <button type="submit">Guardar cambios</button>
     </form>
