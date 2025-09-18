@@ -48,6 +48,9 @@
             <td>${{ pedido.monto_total }}</td>
             <td>{{ pedido.observaciones }}</td><td class="estado {{ pedido.estado }}">{{ pedido.estado }}</td>
             <td><a href="{{ url_for('editar_pedido', id=pedido.id_pedido) }}">Editar</a></td>
+            <td><form method="POST" action="{{ url_for('eliminar_pedido', id=pedido.id_pedido) }}" onsubmit="return confirm('¿Eliminar este pedido?');">
+    <button type="submit" class="btn-eliminar">Eliminar</button>
+</form></td>
         </tr>
         {% endfor %}
     </table>

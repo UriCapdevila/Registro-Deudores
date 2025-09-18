@@ -42,6 +42,9 @@
             <td>{{ cliente.direccion }}</td>
             <td>{{ cliente.observaciones }}</td>
             <td><a href="{{ url_for('editar_cliente', id=cliente.id_cliente) }}">Editar</a></td>
+            <td><form method="POST" action="{{ url_for('eliminar_cliente', id=cliente.id_cliente) }}" onsubmit="return confirm('¿Estás seguro de que querés eliminar este cliente?');">
+    <button type="submit" class="btn-eliminar">Eliminar</button>
+</form></td>
         </tr>
         {% endfor %}
     </table>
