@@ -3,7 +3,7 @@
 # ---------------------------
 from flask import Flask, render_template, request, redirect, session, url_for
 import mysql.connector
-import hashlib
+import bcrypt
 import os
 
 # ---------------------------
@@ -38,24 +38,22 @@ def login():
     Si el usuario y contraseña son correctos, inicia sesión.
     """
     error = None
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        hashed_pw = hashlib.sha256(password.encode()).hexdigest()
 
         cursor = db.cursor(dictionary=True)
-        cursor.execute("""
-            SELECT * FROM usuarios 
-            WHERE nombre_usuario = %s AND contrasena_hash = %s
-        """, (username, hashed_pw))
+        cursor.execute("SELECT * FROM usuarios WHERE nombre_usuario = %s", (username,))
         user = cursor.fetchone()
 
-        if user:
+        # Validar contraseña con bcrypt
+        if user and bcrypt.checkpw(password.encode(), user['contrasena_hash'].encode()):
             session['usuario'] = user['nombre_usuario']
             return redirect(url_for('dashboard'))
         else:
             error = "Usuario o contraseña incorrectos"
-    
+
     return render_template('login.html', error=error)
 
 @app.route('/dashboard')
@@ -70,9 +68,14 @@ def dashboard():
 @app.route('/logout')
 def logout():
     """
-    Cierra la sesión del usuario y lo redirige al login.
+    Cierra la sesión del usuario actual y redirige al login.
     """
-    session.clear()
+    usuario = session.get('usuario')
+    session.pop('usuario', None)  # Elimina solo el dato de usuario
+
+    # Podés agregar un log si querés trazabilidad
+    print(f"Usuario '{usuario}' cerró sesión.")
+
     return redirect(url_for('login'))
 
 # ---------------------------
