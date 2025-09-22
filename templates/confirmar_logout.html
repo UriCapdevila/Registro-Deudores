@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmar cierre de sesión</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='logout.css') }}">
+</head>
+<body>
+    <div class="logout-container">
+        <h1>¿Cerrar sesión, {{ usuario }}?</h1>
+        <form method="POST" action="{{ url_for('auth.logout') }}">
+            <button type="submit">Sí, cerrar sesión</button>
+        </form>
+        <a href="{{ url_for('dashboard.dashboard') }}">Cancelar</a>
+    </div>
+</body>
+</html>

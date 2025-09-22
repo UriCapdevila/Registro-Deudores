@@ -9,6 +9,7 @@
     <header class="header">
         <h1>Bienvenido, {{ session['usuario'] }}</h1>
         <nav>
+            <a href="{{ url_for('dashboard.dashboard') }}">Inicio</a>
             <a href="{{ url_for('clientes.clientes') }}">Clientes</a>
             <a href="{{ url_for('productos.productos') }}">Productos</a>
             <a href="{{ url_for('pedidos.pedidos') }}">Pedidos</a>
