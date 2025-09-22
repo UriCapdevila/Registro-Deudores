@@ -6,16 +6,17 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='productos.css') }}">
 </head>
 <body>
-        <header class="header">
+    <header class="header">
         <h1>Tus productos</h1>
         <nav>
-            <a href="{{ url_for('dashboard') }}">Inicio</a>
-            <a href="{{ url_for('clientes') }}">Clientes</a>
-            <a href="{{ url_for('productos') }}">Productos</a>
-            <a href="{{ url_for('pedidos') }}">Pedidos</a>
-            <a href="{{ url_for('login') }}">Cerrar sesión</a>
+            <a href="{{ url_for('dashboard.dashboard') }}">Inicio</a>
+            <a href="{{ url_for('clientes.clientes') }}">Clientes</a>
+            <a href="{{ url_for('productos.productos') }}">Productos</a>
+            <a href="{{ url_for('pedidos.pedidos') }}">Pedidos</a>
+            <a href="{{ url_for('auth.confirmar_logout') }}">Cerrar sesión</a>
         </nav>
     </header>
+
     <h1>Productos de {{ session.get('usuario', 'Invitado') }}</h1>
 
     <form method="POST" action="">
@@ -30,7 +31,7 @@
     <h2>Listado de productos</h2>
     <table>
         <tr>
-            <th>Nombre</th><th>Precio</th><th>Categoría</th><th>Stock</th><th>Descripción</th>
+            <th>Nombre</th><th>Precio</th><th>Categoría</th><th>Stock</th><th>Descripción</th><th colspan="2">Acciones</th>
         </tr>
         {% for producto in productos %}
         <tr>
@@ -39,21 +40,21 @@
             <td>{{ producto.categoria }}</td>
             <td>{{ producto.stock }}</td>
             <td>{{ producto.descripcion }}</td>
-            <td><a href="{{ url_for('editar_producto', id=producto.id_producto) }}">Editar</a></td>
-<td>
-    <form method="POST" action="{{ url_for('eliminar_producto', id=producto.id_producto) }}" onsubmit="return confirm('¿Eliminar este producto?');">
-        {% if csrf_token %}
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        {% endif %}
-        <button type="submit" class="btn-eliminar">Eliminar</button>
-    </form>
-</td>
-        <p>© {{ current_year }} Uriel | Burzaco, Buenos Aires</p>
+            <td><a href="{{ url_for('productos.editar_producto', id=producto.id_producto) }}">Editar</a></td>
+            <td>
+                <form method="POST" action="{{ url_for('productos.eliminar_producto', id=producto.id_producto) }}" onsubmit="return confirm('¿Eliminar este producto?');">
+                    {% if csrf_token %}
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    {% endif %}
+                    <button type="submit" class="btn-eliminar">Eliminar</button>
+                </form>
+            </td>
+        </tr>
         {% endfor %}
     </table>
 
     <footer class="footer">
-        <p>© 2025 Uriel | Burzaco, Buenos Aires</p>
+        <p>© {{ current_year|default('2025') }} Uriel | Burzaco, Buenos Aires</p>
     </footer>
 </body>
 </html>

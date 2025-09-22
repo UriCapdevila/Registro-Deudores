@@ -9,16 +9,17 @@
     <header class="header">
         <h1>Tus clientes</h1>
         <nav>
-            <a href="{{ url_for('dashboard') }}">Inicio</a>
-            <a href="{{ url_for('clientes') }}">Clientes</a>
-            <a href="{{ url_for('productos') }}">Productos</a>
-            <a href="{{ url_for('pedidos') }}">Pedidos</a>
-            <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+            <a href="{{ url_for('dashboard.dashboard') }}">Inicio</a>
+            <a href="{{ url_for('clientes.clientes') }}">Clientes</a>
+            <a href="{{ url_for('productos.productos') }}">Productos</a>
+            <a href="{{ url_for('pedidos.pedidos') }}">Pedidos</a>
+            <a href="{{ url_for('auth.confirmar_logout') }}">Cerrar sesión</a>
         </nav>
     </header>
+
     <h1>Clientes de {{ session.get('usuario', 'Invitado') }}</h1>
 
-    <form method="POST" action="{{ url_for('clientes') }}">
+    <form method="POST" action="{{ url_for('clientes.clientes') }}">
         <input type="text" name="nombre" placeholder="Nombre completo" required>
         <input type="text" name="dni" placeholder="DNI">
         <input type="email" name="email" placeholder="Email">
@@ -31,7 +32,7 @@
     <h2>Listado de clientes</h2>
     <table>
         <tr>
-            <th>Nombre</th><th>DNI</th><th>Email</th><th>Teléfono</th><th>Dirección</th><th>Observaciones</th>
+            <th>Nombre</th><th>DNI</th><th>Email</th><th>Teléfono</th><th>Dirección</th><th>Observaciones</th><th colspan="2">Acciones</th>
         </tr>
         {% for cliente in clientes %}
         <tr>
@@ -41,14 +42,15 @@
             <td>{{ cliente.telefono }}</td>
             <td>{{ cliente.direccion }}</td>
             <td>{{ cliente.observaciones }}</td>
-            <td><a href="{{ url_for('editar_cliente', id=cliente.id_cliente) }}">Editar</a></td>
+            <td><a href="{{ url_for('clientes.editar_cliente', id=cliente.id_cliente) }}">Editar</a></td>
             <td>
-                <form method="POST" action="{{ url_for('eliminar_cliente', id=cliente.id_cliente) }}" onsubmit="return confirm('¿Estás seguro de que querés eliminar este cliente?');">
+                <form method="POST" action="{{ url_for('clientes.eliminar_cliente', id=cliente.id_cliente) }}" onsubmit="return confirm('¿Estás seguro de que querés eliminar este cliente?');">
                     <button type="submit" class="btn-eliminar">Eliminar</button>
                 </form>
             </td>
         </tr>
-    {% endfor %}
+        {% endfor %}
+    </table>
 
     <footer class="footer">
         <p>© 2025 Uriel | Burzaco, Buenos Aires</p>
