@@ -59,3 +59,48 @@ def mostrar_pedidos():
 
     conn.close()
     return render_template('pedidos/pedidos.html', pedidos=pedidos, clientes=clientes)
+
+@pedidos_bp.route('/pedidos/editar/<int:id>', methods=['GET', 'POST'])
+def editar_pedido(id):
+    if 'id_usuario' not in session:
+        flash('Debés iniciar sesión para editar pedidos')
+        return redirect(url_for('auth.login'))
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # Obtener el pedido
+    cursor.execute("""
+        SELECT * FROM pedidos
+        WHERE id_pedido = %s AND id_usuario = %s
+    """, (id, session['id_usuario']))
+    pedido = cursor.fetchone()
+
+    if not pedido:
+        flash('Pedido no encontrado o no autorizado')
+        conn.close()
+        return redirect(url_for('pedidos.mostrar_pedidos'))
+
+    if request.method == 'POST':
+        estado = request.form.get('estado')
+        monto_total = request.form.get('monto_total')
+        observaciones = request.form.get('observaciones')
+
+        try:
+            cursor.execute("""
+                UPDATE pedidos
+                SET estado = %s, monto_total = %s, observaciones = %s
+                WHERE id_pedido = %s AND id_usuario = %s
+            """, (estado, monto_total, observaciones, id, session['id_usuario']))
+            conn.commit()
+            flash('Pedido actualizado correctamente')
+        except Exception as e:
+            conn.rollback()
+            flash(f'Error al actualizar el pedido: {e}')
+        finally:
+            conn.close()
+
+        return redirect(url_for('pedidos.mostrar_pedidos'))
+
+    conn.close()
+    return render_template('pedidos/editar_pedido.html', pedido=pedido, current_year=2025)
