@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from database import get_db_connection
+from forms.productos_forms import ProductoForm
 
 productos_bp = Blueprint('productos', __name__)
 
@@ -17,47 +18,34 @@ def mostrar_productos():
 
     return render_template('productos/productos.html', productos=productos, current_year=2025)
 
-@productos_bp.route('/productos/agregar', methods=['POST'])
+@productos_bp.route('/productos/agregar', methods=['GET', 'POST'])
 def agregar_producto():
     if 'id_usuario' not in session:
         flash('Debés iniciar sesión para agregar productos')
         return redirect(url_for('auth.login'))
 
-    nombre = request.form.get('nombre')
-    precio_raw = request.form.get('precio')
-    categoria = request.form.get('categoria') or 'Sin categoría'
-    stock_raw = request.form.get('stock') or 0
-    descripcion = request.form.get('descripcion') or ''
+    form = ProductoForm()
 
-    # Validación de campos obligatorios
-    if not nombre or not precio_raw:
-        flash('Nombre y precio son obligatorios')
-        return redirect(url_for('productos.mostrar_productos'))
-
-    # Conversión segura
-    try:
-        precio = float(precio_raw)
-        stock = int(stock_raw)
-    except ValueError:
-        flash('Precio y stock deben ser valores numéricos válidos')
-        return redirect(url_for('productos.mostrar_productos'))
-
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    try:
+    if form.validate_on_submit():
+        conn = get_db_connection()
+        cursor = conn.cursor()
         cursor.execute("""
             INSERT INTO productos (nombre_producto, precio, categoria, stock, descripcion, id_usuario)
             VALUES (%s, %s, %s, %s, %s, %s)
-        """, (nombre, precio, categoria, stock, descripcion, session['id_usuario']))
+        """, (
+            form.nombre.data,
+            float(form.precio.data),
+            form.categoria.data,
+            form.stock.data or 0,
+            form.descripcion.data or '',
+            session['id_usuario']
+        ))
         conn.commit()
-        flash('Producto agregado correctamente')
-    except Exception as e:
-        conn.rollback()
-        flash(f'Error al agregar producto: {e}')
-    finally:
         conn.close()
+        flash('Producto agregado correctamente')
+        return redirect(url_for('productos.mostrar_productos'))
 
-    return redirect(url_for('productos.mostrar_productos'))
+    return render_template('productos/agregar_producto.html', form=form, current_year=2025)
 
 @productos_bp.route('/productos/editar/<int:id>', methods=['GET', 'POST'])
 def editar_producto(id):
