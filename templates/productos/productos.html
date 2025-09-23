@@ -10,9 +10,9 @@
         <h1>Tus productos</h1>
         <nav>
             <a href="{{ url_for('dashboard.dashboard') }}">Inicio</a>
-            <a href="{{ url_for('clientes.clientes') }}">Clientes</a>
-            <a href="{{ url_for('productos.productos') }}">Productos</a>
-            <a href="{{ url_for('pedidos.pedidos') }}">Pedidos</a>
+            <a href="{{ url_for('clientes.mostrar_clientes') }}">Clientes</a>
+            <a href="{{ url_for('productos.mostrar_productos') }}">Productos</a>
+            <a href="{{ url_for('pedidos.mostrar_pedidos') }}">Pedidos</a>
             <a href="{{ url_for('auth.confirmar_logout') }}">Cerrar sesión</a>
         </nav>
     </header>

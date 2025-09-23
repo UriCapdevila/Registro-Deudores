@@ -1,25 +1,35 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash, session
+from flask_wtf.csrf import generate_csrf
 from database import get_db_connection
+from forms.clientes_forms import ClienteForm
 
 clientes_bp = Blueprint('clientes', __name__)
 
-@clientes_bp.route('/clientes')
+@clientes_bp.route('/clientes', methods=['GET', 'POST'])
 def mostrar_clientes():
+    form = ClienteForm()
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(dictionary=True)
+
+    if form.validate_on_submit():
+        cursor.execute(
+            "INSERT INTO clientes (nombre_cliente, dni, email, telefono, direccion, observaciones) VALUES (%s, %s, %s, %s, %s, %s)",
+            (
+                form.nombre.data,
+                form.dni.data,
+                form.email.data,
+                form.telefono.data,
+                form.direccion.data,
+                form.observaciones.data
+            )
+        )
+        conn.commit()
+        flash('Cliente agregado correctamente')
+        return redirect(url_for('clientes.mostrar_clientes'))
+
     cursor.execute("SELECT * FROM clientes")
     clientes = cursor.fetchall()
     conn.close()
-    return render_template('clientes/clientes.html', clientes=clientes)
 
-@clientes_bp.route('/clientes/agregar', methods=['POST'])
-def agregar_cliente():
-    nombre = request.form['nombre']
-    email = request.form['email']
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO clientes (nombre, email) VALUES (%s, %s)", (nombre, email))
-    conn.commit()
-    conn.close()
-    flash('Cliente agregado correctamente')
-    return redirect(url_for('clientes.mostrar_clientes'))
+    csrf_token = generate_csrf()
+    return render_template('clientes/clientes.html', clientes=clientes, form=form, csrf_token=csrf_token)

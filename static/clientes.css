@@ -36,6 +36,17 @@ body {
     text-decoration: underline;
 }
 
+/* Mensajes flash */
+
+.flash-messages {
+    background-color: #e0ffe0;
+    border: 1px solid #00aa00;
+    padding: 10px;
+    margin-bottom: 15px;
+    list-style: none;
+}
+
+
 /* Formulario */
 form {
     margin: 2rem auto;

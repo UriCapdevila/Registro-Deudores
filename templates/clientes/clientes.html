@@ -11,13 +11,24 @@
         <nav>
             <a href="{{ url_for('dashboard.dashboard') }}">Inicio</a>
             <a href="{{ url_for('clientes.mostrar_clientes') }}">Clientes</a>
-            <a href="{{ url_for('productos.productos') }}">Productos</a>
-            <a href="{{ url_for('pedidos.pedidos') }}">Pedidos</a>
+            <a href="{{ url_for('productos.mostrar_productos') }}">Productos</a>
+            <a href="{{ url_for('pedidos.mostrar_pedidos') }}">Pedidos</a>
             <a href="{{ url_for('auth.confirmar_logout') }}">Cerrar sesión</a>
         </nav>
     </header>
 
     <h1>Clientes de {{ session.get('usuario', 'Invitado') }}</h1>
+
+    {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flash-messages">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
 
     <form method="POST" action="{{ url_for('clientes.agregar_cliente') }}">
         {{ form.hidden_tag() }}
@@ -77,7 +88,7 @@
             <td><a href="{{ url_for('clientes.editar_cliente', id=cliente.id_cliente) }}">Editar</a></td>
             <td>
                 <form method="POST" action="{{ url_for('clientes.eliminar_cliente', id=cliente.id_cliente) }}" onsubmit="return confirm('¿Estás seguro de que querés eliminar este cliente?');">
-                    {{ form.hidden_tag() }}
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                     <button type="submit" class="btn-eliminar">Eliminar</button>
                 </form>
             </td>
