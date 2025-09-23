@@ -10,7 +10,7 @@
         <h1>Tus clientes</h1>
         <nav>
             <a href="{{ url_for('dashboard.dashboard') }}">Inicio</a>
-            <a href="{{ url_for('clientes.clientes') }}">Clientes</a>
+            <a href="{{ url_for('clientes.mostrar_clientes') }}">Clientes</a>
             <a href="{{ url_for('productos.productos') }}">Productos</a>
             <a href="{{ url_for('pedidos.pedidos') }}">Pedidos</a>
             <a href="{{ url_for('auth.confirmar_logout') }}">Cerrar sesión</a>
@@ -19,14 +19,46 @@
 
     <h1>Clientes de {{ session.get('usuario', 'Invitado') }}</h1>
 
-    <form method="POST" action="{{ url_for('clientes.clientes') }}">
-        <input type="text" name="nombre" placeholder="Nombre completo" required>
-        <input type="text" name="dni" placeholder="DNI">
-        <input type="email" name="email" placeholder="Email">
-        <input type="text" name="telefono" placeholder="Teléfono">
-        <input type="text" name="direccion" placeholder="Dirección">
-        <textarea name="observaciones" placeholder="Observaciones"></textarea>
-        <button type="submit">Agregar cliente</button>
+    <form method="POST" action="{{ url_for('clientes.agregar_cliente') }}">
+        {{ form.hidden_tag() }}
+
+        <label for="nombre">{{ form.nombre.label }}</label>
+        {{ form.nombre(id="nombre") }}
+        {% if form.nombre.errors %}
+            <p class="error">{{ form.nombre.errors[0] }}</p>
+        {% endif %}
+
+        <label for="dni">{{ form.dni.label }}</label>
+        {{ form.dni(id="dni") }}
+        {% if form.dni.errors %}
+            <p class="error">{{ form.dni.errors[0] }}</p>
+        {% endif %}
+
+        <label for="email">{{ form.email.label }}</label>
+        {{ form.email(id="email") }}
+        {% if form.email.errors %}
+            <p class="error">{{ form.email.errors[0] }}</p>
+        {% endif %}
+
+        <label for="telefono">{{ form.telefono.label }}</label>
+        {{ form.telefono(id="telefono") }}
+        {% if form.telefono.errors %}
+            <p class="error">{{ form.telefono.errors[0] }}</p>
+        {% endif %}
+
+        <label for="direccion">{{ form.direccion.label }}</label>
+        {{ form.direccion(id="direccion") }}
+        {% if form.direccion.errors %}
+            <p class="error">{{ form.direccion.errors[0] }}</p>
+        {% endif %}
+
+        <label for="observaciones">{{ form.observaciones.label }}</label>
+        {{ form.observaciones(id="observaciones") }}
+        {% if form.observaciones.errors %}
+            <p class="error">{{ form.observaciones.errors[0] }}</p>
+        {% endif %}
+
+        {{ form.submit() }}
     </form>
 
     <h2>Listado de clientes</h2>
@@ -45,6 +77,7 @@
             <td><a href="{{ url_for('clientes.editar_cliente', id=cliente.id_cliente) }}">Editar</a></td>
             <td>
                 <form method="POST" action="{{ url_for('clientes.eliminar_cliente', id=cliente.id_cliente) }}" onsubmit="return confirm('¿Estás seguro de que querés eliminar este cliente?');">
+                    {{ form.hidden_tag() }}
                     <button type="submit" class="btn-eliminar">Eliminar</button>
                 </form>
             </td>

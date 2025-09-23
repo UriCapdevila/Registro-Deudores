@@ -7,11 +7,11 @@
 </head>
 <body>
     <header class="header">
-        <h1>Bienvenido, {{ usuario }}</h1>
+        <h1>Bienvenido, {{ session.get('usuario', 'Invitado') }}</h1>
         <nav>
-            <a href="{{ url_for('clientes.clientes') }}">Clientes</a>
-            <a href="{{ url_for('productos.productos') }}">Productos</a>
-            <a href="{{ url_for('pedidos.pedidos') }}">Pedidos</a>
+            <a href="{{ url_for('clientes.mostrar_clientes') }}">Clientes</a>
+            <a href="{{ url_for('productos.mostrar_productos') }}">Productos</a>
+            <a href="{{ url_for('pedidos.mostrar_pedidos') }}">Pedidos</a>
             <a href="{{ url_for('auth.confirmar_logout') }}">Cerrar sesión</a>
         </nav>
     </header>
@@ -19,15 +19,15 @@
     <main class="main-panel">
         <section class="card">
             <h2>Total de clientes</h2>
-            <p>42</p>
+            <p>{{ total_clientes }}</p>
         </section>
         <section class="card">
             <h2>Total de productos</h2>
-            <p>17</p>
+            <p>{{ total_productos }}</p>
         </section>
         <section class="card">
             <h2>Pedidos activos</h2>
-            <p>5</p>
+            <p>{{ pedidos_activos }}</p>
         </section>
     </main>
 
