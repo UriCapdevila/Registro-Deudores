@@ -30,34 +30,35 @@
             {% endif %}
         {% endwith %}
 
-        <form method="POST" action="{{ url_for('pedidos.registrar_pedido') }}" class="form-pedido">
-            {{ form.hidden_tag() if form }}
-            <label for="id_cliente">Cliente:</label>
-            <select name="id_cliente" id="id_cliente" required>
-                <option value="">Seleccionar cliente</option>
-                {% for cliente in clientes %}
-                    <option value="{{ cliente.id_cliente }}">{{ cliente.nombre_cliente }}</option>
-                {% endfor %}
-            </select>
+        <form method="POST" action="/pedidos/registrar" class="form-pedido">
+    {{ form.hidden_tag() if form }}
+    <label for="id_cliente">Cliente:</label>
+    <select name="id_cliente" id="id_cliente" required>
+        <option value="">Seleccionar cliente</option>
+        {% for cliente in clientes %}
+            <option value="{{ cliente.id_cliente }}">{{ cliente.nombre_cliente }}</option>
+        {% endfor %}
+    </select>
 
-            <label for="fecha">Fecha:</label>
-            <input type="date" name="fecha" id="fecha" required>
+    <label for="fecha">Fecha:</label>
+    <input type="date" name="fecha" id="fecha" required>
 
-            <label for="estado">Estado:</label>
-            <select name="estado" id="estado" required>
-                <option value="pendiente">Pendiente</option>
-                <option value="pagado">Pagado</option>
-                <option value="vencido">Vencido</option>
-            </select>
+    <label for="estado">Estado:</label>
+    <select name="estado" id="estado" required>
+        <option value="pendiente">Pendiente</option>
+        <option value="pagado">Pagado</option>
+        <option value="vencido">Vencido</option>
+    </select>
 
-            <label for="monto_total">Monto total:</label>
-            <input type="number" step="0.01" min="0" name="monto_total" id="monto_total" placeholder="Ej: 1500.00" required>
+    <label for="monto_total">Monto total:</label>
+    <input type="number" step="0.01" min="0" name="monto_total" id="monto_total" placeholder="Ej: 1500.00" required>
 
-            <label for="observaciones">Observaciones:</label>
-            <textarea name="observaciones" id="observaciones" placeholder="Notas adicionales (opcional)"></textarea>
+    <label for="observaciones">Observaciones:</label>
+    <textarea name="observaciones" id="observaciones" placeholder="Notas adicionales (opcional)"></textarea>
 
-            <button type="submit">Registrar pedido</button>
-        </form>
+    <button type="submit">Registrar pedido</button>
+</form>
+
 
         <h2>Listado de pedidos</h2>
         <table class="tabla-pedidos">

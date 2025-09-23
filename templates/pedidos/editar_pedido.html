@@ -10,14 +10,24 @@
         <h1>Editar Pedido</h1>
         <nav>
             <a href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
-            <a href="{{ url_for('pedidos.pedidos') }}">Volver a Pedidos</a>
+            <a href="{{ url_for('pedidos.mostrar_pedidos') }}">Volver a Pedidos</a>
             <a href="{{ url_for('auth.confirmar_logout') }}">Cerrar sesión</a>
         </nav>
     </div>
 
-    <form method="POST">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flash-messages">
+                {% for category, message in messages %}
+                    <li class="flash {{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST" class="form-editar-pedido">
         <label for="fecha">Fecha</label>
-        <input type="date" id="fecha" name="fecha" value="{{ pedido.fecha }}" required>
+        <input type="date" id="fecha" name="fecha" value="{{ pedido.fecha.strftime('%Y-%m-%d') if pedido.fecha }}" required>
 
         <label for="estado">Estado</label>
         <select id="estado" name="estado">
