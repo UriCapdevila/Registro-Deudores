@@ -24,24 +24,39 @@ def agregar_producto():
         return redirect(url_for('auth.login'))
 
     nombre = request.form.get('nombre')
-    precio = request.form.get('precio')
+    precio_raw = request.form.get('precio')
     categoria = request.form.get('categoria') or 'Sin categoría'
-    stock = request.form.get('stock') or 0
+    stock_raw = request.form.get('stock') or 0
     descripcion = request.form.get('descripcion') or ''
 
-    if not nombre or not precio:
+    # Validación de campos obligatorios
+    if not nombre or not precio_raw:
         flash('Nombre y precio son obligatorios')
+        return redirect(url_for('productos.mostrar_productos'))
+
+    # Conversión segura
+    try:
+        precio = float(precio_raw)
+        stock = int(stock_raw)
+    except ValueError:
+        flash('Precio y stock deben ser valores numéricos válidos')
         return redirect(url_for('productos.mostrar_productos'))
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("""
-        INSERT INTO productos (nombre_producto, precio, categoria, stock, descripcion, id_usuario)
-        VALUES (%s, %s, %s, %s, %s, %s)
-    """, (nombre, precio, categoria, stock, descripcion, session['id_usuario']))
-    conn.commit()
-    conn.close()
-    flash('Producto agregado correctamente')
+    try:
+        cursor.execute("""
+            INSERT INTO productos (nombre_producto, precio, categoria, stock, descripcion, id_usuario)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """, (nombre, precio, categoria, stock, descripcion, session['id_usuario']))
+        conn.commit()
+        flash('Producto agregado correctamente')
+    except Exception as e:
+        conn.rollback()
+        flash(f'Error al agregar producto: {e}')
+    finally:
+        conn.close()
+
     return redirect(url_for('productos.mostrar_productos'))
 
 @productos_bp.route('/productos/editar/<int:id>', methods=['GET', 'POST'])
