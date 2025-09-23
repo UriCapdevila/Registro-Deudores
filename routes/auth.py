@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template, request, redirect, session, url_for, flash
+from flask import Blueprint, render_template, redirect, session, url_for, flash
 from database import get_db_connection
+from forms.auth_forms import LoginForm, RegistroForm
 import bcrypt
 
 auth_bp = Blueprint('auth', __name__)
@@ -10,14 +11,18 @@ def home():
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    form = LoginForm()
     error = None
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
 
-        cursor = db.cursor(dictionary=True)
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM usuarios WHERE nombre_usuario = %s", (username,))
         user = cursor.fetchone()
+        conn.close()
 
         if user and bcrypt.checkpw(password.encode(), user['contrasena_hash'].encode()):
             session['usuario'] = user['nombre_usuario']
@@ -25,16 +30,19 @@ def login():
         else:
             error = "Usuario o contraseña incorrectos"
 
-    return render_template('login.html', error=error)
+    return render_template('login.html', form=form, error=error)
 
 @auth_bp.route('/registro', methods=['GET', 'POST'])
 def registro():
+    form = RegistroForm()
     error = None
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
 
-        cursor = db.cursor(dictionary=True)
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM usuarios WHERE nombre_usuario = %s", (username,))
         existente = cursor.fetchone()
 
@@ -43,10 +51,13 @@ def registro():
         else:
             hashed_pw = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode('utf-8')
             cursor.execute("INSERT INTO usuarios (nombre_usuario, contrasena_hash) VALUES (%s, %s)", (username, hashed_pw))
-            db.commit()
+            conn.commit()
+            conn.close()
             return redirect(url_for('auth.login'))
 
-    return render_template('registro.html', error=error)
+        conn.close()
+
+    return render_template('registro.html', form=form, error=error)
 
 @auth_bp.route('/confirmar_logout')
 def confirmar_logout():
