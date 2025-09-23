@@ -1,14 +1,14 @@
+# config.py
 import os
 from dotenv import load_dotenv
-import mysql.connector
 
 load_dotenv()
 
-db = mysql.connector.connect(
-    host=os.getenv("DB_HOST", "localhost"),
-    user=os.getenv("DB_USER", "root"),
-    password=os.getenv("DB_PASSWORD", ""),
-    database=os.getenv("DB_NAME", "registrodeudores")
-)
-
-SECRET_KEY = os.getenv("SECRET_KEY", "clave_segura")
+class Config:
+    SECRET_KEY = os.getenv("SECRET_KEY", "clave_segura")
+    DB_HOST = os.getenv("DB_HOST", "localhost")
+    DB_USER = os.getenv("DB_USER", "root")
+    DB_PASSWORD = os.getenv("DB_PASSWORD", "")
+    DB_NAME = os.getenv("DB_NAME", "registrodeudores")
+    WTF_CSRF_ENABLED = True
+    WTF_CSRF_SECRET_KEY = os.getenv("CSRF_SECRET", "otra_clave_segura")

@@ -6,12 +6,15 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='logout.css') }}">
 </head>
 <body>
-    <div class="logout-container">
-        <h1>¿Cerrar sesión, {{ usuario }}?</h1>
+    <main class="logout-box">
+        <h2>¿Cerrar sesión, {{ usuario }}?</h2>
         <form method="POST" action="{{ url_for('auth.logout') }}">
+            {% if csrf_token %}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% endif %}
             <button type="submit">Sí, cerrar sesión</button>
         </form>
         <a href="{{ url_for('dashboard.dashboard') }}">Cancelar</a>
-    </div>
+    </main>
 </body>
 </html>
