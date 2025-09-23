@@ -104,3 +104,27 @@ def editar_pedido(id):
 
     conn.close()
     return render_template('pedidos/editar_pedido.html', pedido=pedido, current_year=2025)
+
+@pedidos_bp.route('/pedidos/eliminar/<int:id>', methods=['POST'])
+def eliminar_pedido(id):
+    if 'id_usuario' not in session:
+        flash('Debés iniciar sesión para eliminar pedidos')
+        return redirect(url_for('auth.login'))
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("""
+            DELETE FROM pedidos
+            WHERE id_pedido = %s AND id_usuario = %s
+        """, (id, session['id_usuario']))
+        conn.commit()
+        flash('Pedido eliminado correctamente')
+    except Exception as e:
+        conn.rollback()
+        flash(f'Error al eliminar el pedido: {e}')
+    finally:
+        conn.close()
+
+    return redirect(url_for('pedidos.mostrar_pedidos'))
