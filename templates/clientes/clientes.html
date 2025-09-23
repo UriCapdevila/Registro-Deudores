@@ -30,7 +30,7 @@
 {% endwith %}
 
 
-    <form method="POST" action="{{ url_for('clientes.agregar_cliente') }}">
+    <form method="POST" action="{{ url_for('clientes.mostrar_clientes') }}">
         {{ form.hidden_tag() }}
 
         <label for="nombre">{{ form.nombre.label }}</label>

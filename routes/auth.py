@@ -26,6 +26,8 @@ def login():
 
         if user and bcrypt.checkpw(password.encode(), user['contrasena_hash'].encode()):
             session['usuario'] = user['nombre_usuario']
+            session['id_usuario'] = user['id_usuario']  # ✅ clave para vincular clientes
+            flash(f"Bienvenido, {user['nombre_usuario']}")  # opcional
             return redirect(url_for('dashboard.dashboard'))
         else:
             error = "Usuario o contraseña incorrectos"
@@ -50,10 +52,21 @@ def registro():
             error = "El nombre de usuario ya está en uso"
         else:
             hashed_pw = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode('utf-8')
-            cursor.execute("INSERT INTO usuarios (nombre_usuario, contrasena_hash) VALUES (%s, %s)", (username, hashed_pw))
+            cursor.execute(
+                "INSERT INTO usuarios (nombre_usuario, contrasena_hash) VALUES (%s, %s)",
+                (username, hashed_pw)
+            )
             conn.commit()
+
+            # ✅ Recuperar el nuevo id_usuario para iniciar sesión automáticamente
+            cursor.execute("SELECT * FROM usuarios WHERE nombre_usuario = %s", (username,))
+            nuevo_usuario = cursor.fetchone()
+            session['usuario'] = nuevo_usuario['nombre_usuario']
+            session['id_usuario'] = nuevo_usuario['id']
             conn.close()
-            return redirect(url_for('auth.login'))
+
+            flash("Registro exitoso. Sesión iniciada.")
+            return redirect(url_for('dashboard.dashboard'))
 
         conn.close()
 
@@ -69,5 +82,7 @@ def confirmar_logout():
 def logout():
     usuario = session.get('usuario')
     session.pop('usuario', None)
+    session.pop('id_usuario', None)  # ✅ limpiar también el id
     print(f"Usuario '{usuario}' cerró sesión.")
+    flash("Sesión cerrada correctamente.")
     return redirect(url_for('auth.login'))
