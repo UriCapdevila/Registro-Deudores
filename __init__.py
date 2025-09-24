@@ -1,14 +1,12 @@
 from flask import Flask
 from utils.filters import formatear_fecha, calcular_total_pagos, estado_pago
 from extensions import db
+from config import Config
+from sqlalchemy import text
 
 def create_app():
     app = Flask(__name__)
-    app.secret_key = 'tu_clave_secreta'
-
-    # 🔗 Configuración de base de datos
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://usuario:contraseña@localhost/distribuidora_db'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config.from_object(Config)  # ✅ Usa configuración desde .env
 
     # 🔧 Inicializar extensiones
     db.init_app(app)
@@ -17,6 +15,15 @@ def create_app():
     app.jinja_env.filters['formatear_fecha'] = formatear_fecha
     app.jinja_env.filters['calcular_total_pagos'] = calcular_total_pagos
     app.jinja_env.filters['estado_pago'] = estado_pago
+
+    # 🧪 Test de conexión
+    with app.app_context():
+        try:
+            with db.engine.connect() as connection:
+                connection.execute(text("SELECT 1"))
+            print("✅ Conexión a la base de datos exitosa")
+        except Exception as e:
+            print("❌ Error de conexión:", e)
 
     # 📦 Blueprints
     from routes.auth import auth_bp
