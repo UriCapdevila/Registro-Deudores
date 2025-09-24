@@ -1,144 +1,97 @@
-/* Estilo base */
-body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #f4f6f8;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-
-/* Encabezado */
-.header {
-    background-color: #0078D4;
-    color: white;
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.header nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-.header nav a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.header nav a:hover {
-    text-decoration: underline;
-}
-
-/* Mensajes flash */
-
-.flash-messages {
-    background-color: #e0ffe0;
-    border: 1px solid #00aa00;
-    padding: 10px;
-    margin-bottom: 15px;
-    list-style: none;
-}
-
-
-/* Formulario */
-form {
-    margin: 2rem auto;
-    display: grid;
-    gap: 0.75rem;
-    max-width: 600px;
-    background-color: white;
-    padding: 1.5rem;
+/* === FORMULARIO DE CLIENTES === */
+.form-agregar-cliente,
+.form-editar-cliente {
+    background-color: #ffffff;
+    padding: 2rem;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    display: grid;
+    gap: 1rem;
+    max-width: 600px;
+    margin-bottom: 2rem;
 }
 
-input, textarea {
-    padding: 0.6rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
+.form-agregar-cliente input,
+.form-agregar-cliente textarea,
+.form-editar-cliente input,
+.form-editar-cliente textarea {
     width: 100%;
 }
 
-textarea {
-    resize: vertical;
-    min-height: 80px;
-}
-
-button {
-    padding: 0.7rem;
-    background-color: #0078D4;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-}
-
-button:hover {
-    background-color: #005fa3;
-}
-
-/* Tabla */
-table {
+/* === TABLA DE CLIENTES === */
+.tabla-clientes {
     width: 100%;
     border-collapse: collapse;
-    background-color: white;
-    margin-top: 2rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-top: 1rem;
 }
 
-th, td {
+.tabla-clientes th,
+.tabla-clientes td {
     padding: 0.75rem;
     border: 1px solid #ddd;
     text-align: left;
-    font-size: 0.95rem;
 }
 
-th {
+.tabla-clientes th {
     background-color: #e8f0fe;
-    color: #333;
+    font-weight: bold;
 }
 
-/* Footer */
-.footer {
-    background-color: #f0f0f0;
-    text-align: center;
-    padding: 1rem;
-    font-size: 0.9rem;
-    color: #666;
-    border-top: 1px solid #ddd;
-    margin-top: auto;
+.tabla-clientes tr:nth-child(even) {
+    background-color: #f9f9f9;
 }
-/* Responsive */
+
+/* === BOTONES DE ACCIÓN === */
+.btn-agregar {
+    background-color: #27ae60;
+}
+
+.btn-agregar:hover {
+    background-color: #219150;
+}
+
+.btn-eliminar {
+    background-color: #e74c3c;
+}
+
+.btn-eliminar:hover {
+    background-color: #c0392b;
+}
+
+/* === RESPONSIVE === */
 @media (max-width: 768px) {
-    body {
+    .form-agregar-cliente,
+    .form-editar-cliente {
         padding: 1rem;
     }
 
-    .header {
-        flex-direction: column;
-        align-items: flex-start;
+    .tabla-clientes,
+    .tabla-clientes thead,
+    .tabla-clientes tbody,
+    .tabla-clientes th,
+    .tabla-clientes td,
+    .tabla-clientes tr {
+        display: block;
     }
 
-    form {
-        padding: 1rem;
-        max-width: 100%;
+    .tabla-clientes th {
+        display: none;
     }
 
-    table, th, td {
-        font-size: 0.85rem;
+    .tabla-clientes td {
+        position: relative;
+        padding-left: 50%;
     }
 
-    th, td {
-        padding: 0.5rem;
+    .tabla-clientes td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        top: 0;
+        padding: 0.75rem;
+        font-weight: bold;
+        background-color: #ecf0f1;
+        width: 45%;
+        border-right: 1px solid #ddd;
     }
 }

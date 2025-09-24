@@ -1,0 +1,80 @@
+/* === TABLA DE USUARIOS === */
+.tabla-usuarios {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.tabla-usuarios th,
+.tabla-usuarios td {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.tabla-usuarios th {
+    background-color: #f0f0ff;
+    font-weight: bold;
+}
+
+.tabla-usuarios tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* === BOTONES === */
+.tabla-usuarios a {
+    color: #8e44ad;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.tabla-usuarios a:hover {
+    text-decoration: underline;
+}
+
+.btn-eliminar {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.btn-eliminar:hover {
+    background-color: #c0392b;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+    .tabla-usuarios,
+    .tabla-usuarios thead,
+    .tabla-usuarios tbody,
+    .tabla-usuarios th,
+    .tabla-usuarios td,
+    .tabla-usuarios tr {
+        display: block;
+    }
+
+    .tabla-usuarios th {
+        display: none;
+    }
+
+    .tabla-usuarios td {
+        position: relative;
+        padding-left: 50%;
+    }
+
+    .tabla-usuarios td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        top: 0;
+        padding: 0.75rem;
+        font-weight: bold;
+        background-color: #f0f0ff;
+        width: 45%;
+        border-right: 1px solid #ddd;
+    }
+}

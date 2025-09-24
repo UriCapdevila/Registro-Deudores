@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Usuario{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='editar_usuario.css') }}">
+{% endblock %}
+
+{% block content %}
+<h2>Editar Usuario #{{ usuario.id_usuario }}</h2>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="flash-messages">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+
+    <label for="nombre">{{ form.nombre.label }}</label>
+    {{ form.nombre(id="nombre", value=usuario.nombre) }}
+    {% if form.nombre.errors %}
+        <p class="error">{{ form.nombre.errors[0] }}</p>
+    {% endif %}
+
+    <label for="email">{{ form.email.label }}</label>
+    {{ form.email(id="email", value=usuario.email) }}
+    {% if form.email.errors %}
+        <p class="error">{{ form.email.errors[0] }}</p>
+    {% endif %}
+
+    {% if session.get('rol') == 'admin' %}
+        <label for="rol">{{ form.rol.label }}</label>
+        {{ form.rol(id="rol", value=usuario.rol) }}
+        {% if form.rol.errors %}
+            <p class="error">{{ form.rol.errors[0] }}</p>
+        {% endif %}
+    {% endif %}
+
+    {{ form.submit() }}
+</form>
+{% endblock %}

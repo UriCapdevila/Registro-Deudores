@@ -1,5 +1,5 @@
-/* === FORMULARIO DE PRODUCTOS === */
-.form-agregar-producto {
+/* === FORMULARIO DE VENTAS === */
+.form-agregar-venta {
     background-color: #ffffff;
     padding: 2rem;
     border-radius: 8px;
@@ -10,91 +10,77 @@
     margin-bottom: 2rem;
 }
 
-.form-agregar-producto input,
-.form-agregar-producto textarea {
+.form-agregar-venta input,
+.form-agregar-venta select {
     width: 100%;
 }
 
-/* === TABLA DE PRODUCTOS === */
-.tabla-productos {
+/* === TABLA DE VENTAS === */
+.tabla-ventas {
     width: 100%;
     border-collapse: collapse;
     margin-top: 1rem;
 }
 
-.tabla-productos th,
-.tabla-productos td {
+.tabla-ventas th,
+.tabla-ventas td {
     padding: 0.75rem;
     border: 1px solid #ddd;
     text-align: left;
 }
 
-.tabla-productos th {
-    background-color: #f0f4ff;
+.tabla-ventas th {
+    background-color: #fef3e0;
     font-weight: bold;
 }
 
-.tabla-productos tr:nth-child(even) {
+.tabla-ventas tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
 /* === BOTONES DE ACCIÓN === */
-.tabla-productos a {
-    color: #2980b9;
+.tabla-ventas a {
+    color: #e67e22;
     text-decoration: none;
     font-weight: bold;
 }
 
-.tabla-productos a:hover {
+.tabla-ventas a:hover {
     text-decoration: underline;
-}
-
-.btn-eliminar {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 0.4rem 0.8rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-}
-
-.btn-eliminar:hover {
-    background-color: #c0392b;
 }
 
 /* === RESPONSIVE === */
 @media (max-width: 768px) {
-    .form-agregar-producto {
+    .form-agregar-venta {
         padding: 1rem;
     }
 
-    .tabla-productos,
-    .tabla-productos thead,
-    .tabla-productos tbody,
-    .tabla-productos th,
-    .tabla-productos td,
-    .tabla-productos tr {
+    .tabla-ventas,
+    .tabla-ventas thead,
+    .tabla-ventas tbody,
+    .tabla-ventas th,
+    .tabla-ventas td,
+    .tabla-ventas tr {
         display: block;
     }
 
-    .tabla-productos th {
+    .tabla-ventas th {
         display: none;
     }
 
-    .tabla-productos td {
+    .tabla-ventas td {
         position: relative;
         padding-left: 50%;
     }
 
-    .tabla-productos td::before {
+    .tabla-ventas td::before {
         content: attr(data-label);
         position: absolute;
         left: 0;
         top: 0;
         padding: 0.75rem;
         font-weight: bold;
-        background-color: #ecf0f1;
+        background-color: #fef3e0;
         width: 45%;
         border-right: 1px solid #ddd;
     }
