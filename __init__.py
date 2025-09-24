@@ -1,16 +1,24 @@
 from flask import Flask
 from utils.filters import formatear_fecha, calcular_total_pagos, estado_pago
+from extensions import db
 
 def create_app():
     app = Flask(__name__)
     app.secret_key = 'tu_clave_secreta'
 
-    # Registrar filtros personalizados
+    # 🔗 Configuración de base de datos
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///distribuidora_db.db'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    # 🔧 Inicializar extensiones
+    db.init_app(app)
+
+    # 🎨 Filtros personalizados
     app.jinja_env.filters['formatear_fecha'] = formatear_fecha
     app.jinja_env.filters['calcular_total_pagos'] = calcular_total_pagos
     app.jinja_env.filters['estado_pago'] = estado_pago
 
-    # Registrar blueprints por módulo
+    # 📦 Blueprints
     from routes.auth import auth_bp
     from routes.clientes import clientes_bp
     from routes.dashboard import dashboard_bp

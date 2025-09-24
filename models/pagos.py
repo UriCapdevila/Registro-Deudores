@@ -1,3 +1,5 @@
+from extensions import db  # ✅ Importar db desde extensions
+
 class Pago(db.Model):
     __tablename__ = 'pagos'
 

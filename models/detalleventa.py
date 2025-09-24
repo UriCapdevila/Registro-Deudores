@@ -1,3 +1,5 @@
+from extensions import db
+
 class DetalleVenta(db.Model):
     __tablename__ = 'detalle_venta'
 
