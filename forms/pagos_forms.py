@@ -1,3 +1,4 @@
+from extensions import db
 from flask_wtf import FlaskForm
 from wtforms import DecimalField, DateField, SelectField, IntegerField, SubmitField
 from wtforms.validators import DataRequired, NumberRange, Optional
