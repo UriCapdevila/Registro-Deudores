@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Gestión de Pagos{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='pagos.css') }}">
+{% endblock %}
+
+{% block content %}
+<h2>Registrar nuevo pago</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+
+    <label for="venta_id">{{ form.venta_id.label }}</label>
+    {{ form.venta_id(id="venta_id") }}
+
+    <label for="fecha_pago">{{ form.fecha_pago.label }}</label>
+    {{ form.fecha_pago(id="fecha_pago") }}
+
+    <label for="monto">{{ form.monto.label }}</label>
+    {{ form.monto(id="monto") }}
+
+    <label for="estado">{{ form.estado.label }}</label>
+    {{ form.estado(id="estado") }}
+
+    <label for="cuota_nro">{{ form.cuota_nro.label }}</label>
+    {{ form.cuota_nro(id="cuota_nro") }}
+
+    {{ form.submit() }}
+</form>
+
+<h2>Pagos recientes</h2>
+<table>
+    <tr>
+        <th>Venta</th><th>Fecha</th><th>Monto</th><th>Estado</th><th>Cuota</th><th>Acciones</th>
+    </tr>
+    {% for pago in pagos %}
+    <tr>
+        <td>#{{ pago.venta_id }}</td>
+        <td>{{ pago.fecha_pago|formatear_fecha }}</td>
+        <td>${{ pago.monto }}</td>
+        <td>{{ pago|estado_pago }}</td>
+        <td>{{ pago.cuota_nro }}</td>
+        <td>
+            <a href="{{ url_for('pagos.editar_pago', id=pago.id_pago) }}">Editar</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

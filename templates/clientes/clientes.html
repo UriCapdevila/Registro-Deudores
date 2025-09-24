@@ -1,25 +1,15 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Gestión de Clientes</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='clientes.css') }}">
-</head>
-<body>
-    <header class="header">
-        <h1>Tus clientes</h1>
-        <nav>
-            <a href="{{ url_for('dashboard.dashboard') }}">Inicio</a>
-            <a href="{{ url_for('clientes.mostrar_clientes') }}">Clientes</a>
-            <a href="{{ url_for('productos.mostrar_productos') }}">Productos</a>
-            <a href="{{ url_for('pedidos.mostrar_pedidos') }}">Pedidos</a>
-            <a href="{{ url_for('auth.confirmar_logout') }}">Cerrar sesión</a>
-        </nav>
-    </header>
+{% extends "base.html" %}
 
-    <h1>Clientes de {{ session.get('usuario', 'Invitado') }}</h1>
+{% block title %}Gestión de Clientes{% endblock %}
 
-    {% with messages = get_flashed_messages() %}
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='clientes.css') }}">
+{% endblock %}
+
+{% block content %}
+<h1>Clientes de {{ session.get('usuario', 'Invitado') }}</h1>
+
+{% with messages = get_flashed_messages() %}
   {% if messages %}
     <ul class="flash-messages">
       {% for message in messages %}
@@ -29,75 +19,69 @@
   {% endif %}
 {% endwith %}
 
+<form method="POST" action="{{ url_for('clientes.mostrar_clientes') }}">
+    {{ form.hidden_tag() }}
 
-    <form method="POST" action="{{ url_for('clientes.mostrar_clientes') }}">
-        {{ form.hidden_tag() }}
+    <label for="nombre">{{ form.nombre.label }}</label>
+    {{ form.nombre(id="nombre") }}
+    {% if form.nombre.errors %}
+        <p class="error">{{ form.nombre.errors[0] }}</p>
+    {% endif %}
 
-        <label for="nombre">{{ form.nombre.label }}</label>
-        {{ form.nombre(id="nombre") }}
-        {% if form.nombre.errors %}
-            <p class="error">{{ form.nombre.errors[0] }}</p>
-        {% endif %}
+    <label for="dni">{{ form.dni.label }}</label>
+    {{ form.dni(id="dni") }}
+    {% if form.dni.errors %}
+        <p class="error">{{ form.dni.errors[0] }}</p>
+    {% endif %}
 
-        <label for="dni">{{ form.dni.label }}</label>
-        {{ form.dni(id="dni") }}
-        {% if form.dni.errors %}
-            <p class="error">{{ form.dni.errors[0] }}</p>
-        {% endif %}
+    <label for="email">{{ form.email.label }}</label>
+    {{ form.email(id="email") }}
+    {% if form.email.errors %}
+        <p class="error">{{ form.email.errors[0] }}</p>
+    {% endif %}
 
-        <label for="email">{{ form.email.label }}</label>
-        {{ form.email(id="email") }}
-        {% if form.email.errors %}
-            <p class="error">{{ form.email.errors[0] }}</p>
-        {% endif %}
+    <label for="telefono">{{ form.telefono.label }}</label>
+    {{ form.telefono(id="telefono") }}
+    {% if form.telefono.errors %}
+        <p class="error">{{ form.telefono.errors[0] }}</p>
+    {% endif %}
 
-        <label for="telefono">{{ form.telefono.label }}</label>
-        {{ form.telefono(id="telefono") }}
-        {% if form.telefono.errors %}
-            <p class="error">{{ form.telefono.errors[0] }}</p>
-        {% endif %}
+    <label for="direccion">{{ form.direccion.label }}</label>
+    {{ form.direccion(id="direccion") }}
+    {% if form.direccion.errors %}
+        <p class="error">{{ form.direccion.errors[0] }}</p>
+    {% endif %}
 
-        <label for="direccion">{{ form.direccion.label }}</label>
-        {{ form.direccion(id="direccion") }}
-        {% if form.direccion.errors %}
-            <p class="error">{{ form.direccion.errors[0] }}</p>
-        {% endif %}
+    <label for="observaciones">{{ form.observaciones.label }}</label>
+    {{ form.observaciones(id="observaciones") }}
+    {% if form.observaciones.errors %}
+        <p class="error">{{ form.observaciones.errors[0] }}</p>
+    {% endif %}
 
-        <label for="observaciones">{{ form.observaciones.label }}</label>
-        {{ form.observaciones(id="observaciones") }}
-        {% if form.observaciones.errors %}
-            <p class="error">{{ form.observaciones.errors[0] }}</p>
-        {% endif %}
+    {{ form.submit() }}
+</form>
 
-        {{ form.submit() }}
-    </form>
-
-    <h2>Listado de clientes</h2>
-    <table>
-        <tr>
-            <th>Nombre</th><th>DNI</th><th>Email</th><th>Teléfono</th><th>Dirección</th><th>Observaciones</th><th colspan="2">Acciones</th>
-        </tr>
-        {% for cliente in clientes %}
-        <tr>
-            <td>{{ cliente.nombre_cliente }}</td>
-            <td>{{ cliente.dni }}</td>
-            <td>{{ cliente.email }}</td>
-            <td>{{ cliente.telefono }}</td>
-            <td>{{ cliente.direccion }}</td>
-            <td>{{ cliente.observaciones }}</td>
-            <td><a href="{{ url_for('clientes.editar_cliente', id=cliente.id_cliente) }}">Editar</a></td>
-            <td>
-                <form method="POST" action="{{ url_for('clientes.eliminar_cliente', id=cliente.id_cliente) }}" onsubmit="return confirm('¿Estás seguro de que querés eliminar este cliente?');">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                    <button type="submit" class="btn-eliminar">Eliminar</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-
-    <footer class="footer">
-        <p>© 2025 Uriel | Burzaco, Buenos Aires</p>
-    </footer>
-</body>
-</html>
+<h2>Listado de clientes</h2>
+<table>
+    <tr>
+        <th>Nombre</th><th>DNI</th><th>Email</th><th>Teléfono</th><th>Dirección</th><th>Observaciones</th><th colspan="2">Acciones</th>
+    </tr>
+    {% for cliente in clientes %}
+    <tr>
+        <td>{{ cliente.nombre }}</td>
+        <td>{{ cliente.dni }}</td>
+        <td>{{ cliente.email }}</td>
+        <td>{{ cliente.telefono }}</td>
+        <td>{{ cliente.direccion }}</td>
+        <td>{{ cliente.observaciones }}</td>
+        <td><a href="{{ url_for('clientes.editar_cliente', id=cliente.id_cliente) }}">Editar</a></td>
+        <td>
+            <form method="POST" action="{{ url_for('clientes.eliminar_cliente', id=cliente.id_cliente) }}" onsubmit="return confirm('¿Estás seguro de que querés eliminar este cliente?');">
+                {{ form.csrf_token }}
+                <button type="submit" class="btn-eliminar">Eliminar</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

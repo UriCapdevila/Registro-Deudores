@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, session
 from flask_wtf.csrf import generate_csrf
-from database import get_db_connection
 from forms.clientes_forms import ClienteForm
+from models import db, Cliente
 
 clientes_bp = Blueprint('clientes', __name__)
 
@@ -12,31 +12,21 @@ def mostrar_clientes():
         return redirect(url_for('auth.login'))
 
     form = ClienteForm()
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
 
     if form.validate_on_submit():
-        cursor.execute(
-            "INSERT INTO clientes (nombre_cliente, dni, email, telefono, direccion, observaciones, id_usuario) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-            (
-                form.nombre.data,
-                form.dni.data,
-                form.email.data,
-                form.telefono.data,
-                form.direccion.data,
-                form.observaciones.data,
-                session['id_usuario']  # ✅ clave para vincular cliente al usuario
-            )
+        nuevo_cliente = Cliente(
+            nombre=form.nombre.data,
+            dni=form.dni.data,
+            direccion=form.direccion.data,
+            telefono=form.telefono.data,
+            usuario_id=session['id_usuario']
         )
-        conn.commit()
+        db.session.add(nuevo_cliente)
+        db.session.commit()
         flash('Cliente agregado correctamente')
         return redirect(url_for('clientes.mostrar_clientes'))
 
-    # ✅ Mostrar solo los clientes del usuario activo
-    cursor.execute("SELECT * FROM clientes WHERE id_usuario = %s", (session['id_usuario'],))
-    clientes = cursor.fetchall()
-    conn.close()
-
+    clientes = Cliente.query.filter_by(usuario_id=session['id_usuario']).all()
     csrf_token = generate_csrf()
     return render_template('clientes/clientes.html', clientes=clientes, form=form, csrf_token=csrf_token)
 
@@ -46,46 +36,23 @@ def editar_cliente(id):
         flash('Debés iniciar sesión para editar clientes')
         return redirect(url_for('auth.login'))
 
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-
-    # ✅ Asegurarse de que el cliente pertenece al usuario activo
-    cursor.execute("SELECT * FROM clientes WHERE id_cliente = %s AND id_usuario = %s", (id, session['id_usuario']))
-    cliente = cursor.fetchone()
+    cliente = Cliente.query.filter_by(id_cliente=id, usuario_id=session['id_usuario']).first()
 
     if not cliente:
         flash('Cliente no encontrado o no autorizado')
-        conn.close()
         return redirect(url_for('clientes.mostrar_clientes'))
 
-    form = ClienteForm(data={
-        'nombre': cliente['nombre_cliente'],
-        'dni': cliente['dni'],
-        'email': cliente['email'],
-        'telefono': cliente['telefono'],
-        'direccion': cliente['direccion'],
-        'observaciones': cliente['observaciones']
-    })
+    form = ClienteForm(obj=cliente)
 
     if form.validate_on_submit():
-        cursor.execute("""
-            UPDATE clientes SET nombre_cliente=%s, dni=%s, email=%s, telefono=%s, direccion=%s, observaciones=%s
-            WHERE id_cliente=%s AND id_usuario=%s
-        """, (
-            form.nombre.data,
-            form.dni.data,
-            form.email.data,
-            form.telefono.data,
-            form.direccion.data,
-            form.observaciones.data,
-            id,
-            session['id_usuario']
-        ))
-        conn.commit()
+        cliente.nombre = form.nombre.data
+        cliente.dni = form.dni.data
+        cliente.direccion = form.direccion.data
+        cliente.telefono = form.telefono.data
+        db.session.commit()
         flash('Cliente actualizado correctamente')
         return redirect(url_for('clientes.mostrar_clientes'))
 
-    conn.close()
     return render_template('clientes/editar.html', form=form, cliente=cliente)
 
 @clientes_bp.route('/clientes/eliminar/<int:id>', methods=['POST'])
@@ -94,13 +61,13 @@ def eliminar_cliente(id):
         flash('Debés iniciar sesión para eliminar clientes')
         return redirect(url_for('auth.login'))
 
-    conn = get_db_connection()
-    cursor = conn.cursor()
+    cliente = Cliente.query.filter_by(id_cliente=id, usuario_id=session['id_usuario']).first()
 
-    # ✅ Asegurarse de que el cliente pertenece al usuario activo
-    cursor.execute("DELETE FROM clientes WHERE id_cliente = %s AND id_usuario = %s", (id, session['id_usuario']))
-    conn.commit()
-    conn.close()
+    if cliente:
+        db.session.delete(cliente)
+        db.session.commit()
+        flash('Cliente eliminado correctamente')
+    else:
+        flash('Cliente no encontrado o no autorizado')
 
-    flash('Cliente eliminado correctamente')
     return redirect(url_for('clientes.mostrar_clientes'))

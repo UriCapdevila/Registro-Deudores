@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, session, url_for, flash
-from database import get_db_connection
 from forms.auth_forms import LoginForm, RegistroForm
-import bcrypt
+from models import db, Usuario
+from werkzeug.security import generate_password_hash, check_password_hash
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -15,22 +15,19 @@ def login():
     error = None
 
     if form.validate_on_submit():
-        username = form.username.data
+        email = form.email.data
         password = form.password.data
 
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM usuarios WHERE nombre_usuario = %s", (username,))
-        user = cursor.fetchone()
-        conn.close()
+        usuario = Usuario.query.filter_by(email=email).first()
 
-        if user and bcrypt.checkpw(password.encode(), user['contrasena_hash'].encode()):
-            session['usuario'] = user['nombre_usuario']
-            session['id_usuario'] = user['id_usuario']  # ✅ clave para vincular clientes
-            flash(f"Bienvenido, {user['nombre_usuario']}")  # opcional
+        if usuario and check_password_hash(usuario.contraseña, password):
+            session['usuario'] = usuario.nombre
+            session['id_usuario'] = usuario.id_usuario
+            session['rol'] = usuario.rol  # ✅ Guardamos el rol
+            flash(f"Bienvenido, {usuario.nombre}")
             return redirect(url_for('dashboard.dashboard'))
         else:
-            error = "Usuario o contraseña incorrectos"
+            error = "Email o contraseña incorrectos"
 
     return render_template('login.html', form=form, error=error)
 
@@ -40,35 +37,27 @@ def registro():
     error = None
 
     if form.validate_on_submit():
-        username = form.username.data
-        password = form.password.data
-
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM usuarios WHERE nombre_usuario = %s", (username,))
-        existente = cursor.fetchone()
+        email = form.email.data
+        existente = Usuario.query.filter_by(email=email).first()
 
         if existente:
-            error = "El nombre de usuario ya está en uso"
+            error = "El email ya está registrado"
         else:
-            hashed_pw = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode('utf-8')
-            cursor.execute(
-                "INSERT INTO usuarios (nombre_usuario, contrasena_hash) VALUES (%s, %s)",
-                (username, hashed_pw)
+            nuevo_usuario = Usuario(
+                nombre=form.nombre.data,
+                email=email,
+                contraseña=generate_password_hash(form.password.data),
+                rol=form.rol.data,  # ✅ Rol desde el formulario
+                activo=True
             )
-            conn.commit()
+            db.session.add(nuevo_usuario)
+            db.session.commit()
 
-            # ✅ Recuperar el nuevo id_usuario para iniciar sesión automáticamente
-            cursor.execute("SELECT * FROM usuarios WHERE nombre_usuario = %s", (username,))
-            nuevo_usuario = cursor.fetchone()
-            session['usuario'] = nuevo_usuario['nombre_usuario']
-            session['id_usuario'] = nuevo_usuario['id']
-            conn.close()
-
+            session['usuario'] = nuevo_usuario.nombre
+            session['id_usuario'] = nuevo_usuario.id_usuario
+            session['rol'] = nuevo_usuario.rol  # ✅ Guardamos el rol
             flash("Registro exitoso. Sesión iniciada.")
             return redirect(url_for('dashboard.dashboard'))
-
-        conn.close()
 
     return render_template('registro.html', form=form, error=error)
 
@@ -82,7 +71,8 @@ def confirmar_logout():
 def logout():
     usuario = session.get('usuario')
     session.pop('usuario', None)
-    session.pop('id_usuario', None)  # ✅ limpiar también el id
+    session.pop('id_usuario', None)
+    session.pop('rol', None)  # ✅ Limpiamos el rol también
     print(f"Usuario '{usuario}' cerró sesión.")
     flash("Sesión cerrada correctamente.")
     return redirect(url_for('auth.login'))

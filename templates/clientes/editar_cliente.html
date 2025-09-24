@@ -1,58 +1,63 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Editar Cliente</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='editar_cliente.css') }}">
-</head>
-<body>
-    <header class="header">
-        <h1>Editar Cliente</h1>
-        <nav>
-            <a href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
-            <a href="{{ url_for('clientes.clientes') }}">Volver a Clientes</a>
-            <a href="{{ url_for('auth.confirmar_logout') }}">Cerrar sesión</a>
-        </nav>
-    </header>
+{% extends "base.html" %}
 
-    <main>
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul class="flash-messages">
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
+{% block title %}Editar Cliente{% endblock %}
 
-        <form method="POST" class="form-editar-cliente">
-            <label for="nombre">Nombre completo</label>
-            <input type="text" id="nombre" name="nombre" value="{{ cliente.nombre_cliente or '' }}" required>
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='editar_cliente.css') }}">
+{% endblock %}
 
-            <label for="dni">DNI</label>
-            <input type="text" id="dni" name="dni" value="{{ cliente.dni or '' }}" maxlength="15">
+{% block content %}
+<h2>Editar Cliente</h2>
 
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" value="{{ cliente.email or '' }}" maxlength="254">
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="flash-messages">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
 
-            <label for="telefono">Teléfono</label>
-            <input type="text" id="telefono" name="telefono" value="{{ cliente.telefono or '' }}"
-                   pattern="[0-9]{7,15}" maxlength="15"
-                   title="Ingrese un número de teléfono válido (7-15 dígitos)">
+<form method="POST" class="form-editar-cliente">
+    {{ form.hidden_tag() }}
 
-            <label for="direccion">Dirección</label>
-            <input type="text" id="direccion" name="direccion" value="{{ cliente.direccion or '' }}">
+    <label for="nombre">{{ form.nombre.label }}</label>
+    {{ form.nombre(id="nombre", value=cliente.nombre) }}
+    {% if form.nombre.errors %}
+        <p class="error">{{ form.nombre.errors[0] }}</p>
+    {% endif %}
 
-            <label for="observaciones">Observaciones</label>
-            <textarea id="observaciones" name="observaciones" maxlength="500">{{ cliente.observaciones or '' }}</textarea>
+    <label for="dni">{{ form.dni.label }}</label>
+    {{ form.dni(id="dni", value=cliente.dni) }}
+    {% if form.dni.errors %}
+        <p class="error">{{ form.dni.errors[0] }}</p>
+    {% endif %}
 
-            <button type="submit">Guardar cambios</button>
-        </form>
-    </main>
+    <label for="email">{{ form.email.label }}</label>
+    {{ form.email(id="email", value=cliente.email) }}
+    {% if form.email.errors %}
+        <p class="error">{{ form.email.errors[0] }}</p>
+    {% endif %}
 
-    <footer class="footer">
-        &copy; {{ current_year or 2025 }} Sistema de Gestión | Uriel Dev
-    </footer>
-</body>
-</html>
+    <label for="telefono">{{ form.telefono.label }}</label>
+    {{ form.telefono(id="telefono", value=cliente.telefono) }}
+    {% if form.telefono.errors %}
+        <p class="error">{{ form.telefono.errors[0] }}</p>
+    {% endif %}
+
+    <label for="direccion">{{ form.direccion.label }}</label>
+    {{ form.direccion(id="direccion", value=cliente.direccion) }}
+    {% if form.direccion.errors %}
+        <p class="error">{{ form.direccion.errors[0] }}</p>
+    {% endif %}
+
+    <label for="observaciones">{{ form.observaciones.label }}</label>
+    {{ form.observaciones(id="observaciones", value=cliente.observaciones) }}
+    {% if form.observaciones.errors %}
+        <p class="error">{{ form.observaciones.errors[0] }}</p>
+    {% endif %}
+
+    {{ form.submit() }}
+</form>
+{% endblock %}

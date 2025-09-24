@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Pago{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='editar_pago.css') }}">
+{% endblock %}
+
+{% block content %}
+<h2>Editar Pago #{{ pago.id_pago }}</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+
+    <label for="venta_id">{{ form.venta_id.label }}</label>
+    {{ form.venta_id(id="venta_id", value=pago.venta_id) }}
+
+    <label for="fecha_pago">{{ form.fecha_pago.label }}</label>
+    {{ form.fecha_pago(id="fecha_pago", value=pago.fecha_pago) }}
+
+    <label for="monto">{{ form.monto.label }}</label>
+    {{ form.monto(id="monto", value=pago.monto) }}
+
+    <label for="estado">{{ form.estado.label }}</label>
+    {{ form.estado(id="estado", value=pago.estado) }}
+
+    <label for="cuota_nro">{{ form.cuota_nro.label }}</label>
+    {{ form.cuota_nro(id="cuota_nro", value=pago.cuota_nro) }}
+
+    {{ form.submit() }}
+</form>
+{% endblock %}

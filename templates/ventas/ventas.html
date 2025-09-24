@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Gestión de Ventas{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='ventas.css') }}">
+{% endblock %}
+
+{% block content %}
+<h1>Ventas de {{ session.get('usuario', 'Invitado') }}</h1>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="flash-messages">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<form method="POST" action="{{ url_for('ventas.agregar_venta') }}" class="form-agregar-venta">
+    {{ form.hidden_tag() }}
+
+    <label for="cliente_id">{{ form.cliente_id.label }}</label>
+    {{ form.cliente_id(id="cliente_id") }}
+
+    <label for="fecha">{{ form.fecha.label }}</label>
+    {{ form.fecha(id="fecha") }}
+
+    <label for="total">{{ form.total.label }}</label>
+    {{ form.total(id="total", step="0.01") }}
+
+    {{ form.submit() }}
+</form>
+
+<h2>Listado de ventas</h2>
+<table class="tabla-ventas">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th>Total</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for venta in ventas %}
+        <tr>
+            <td>#{{ venta.id_venta }}</td>
+            <td>{{ venta.fecha|formatear_fecha }}</td>
+            <td>{{ venta.cliente.nombre }}</td>
+            <td>${{ "%.2f"|format(venta.total) }}</td>
+            <td>
+                <a href="{{ url_for('ventas.editar_venta', id=venta.id_venta) }}">Editar</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="5">No hay ventas registradas.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

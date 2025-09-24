@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Administración de Usuarios{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='usuarios.css') }}">
+{% endblock %}
+
+{% block content %}
+<h1>Panel de administración de usuarios</h1>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="flash-messages">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<table class="tabla-usuarios">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for usuario in usuarios %}
+        <tr>
+            <td>{{ usuario.nombre }}</td>
+            <td>{{ usuario.email }}</td>
+            <td>{{ usuario.rol }}</td>
+            <td>
+                <a href="{{ url_for('usuarios.editar_usuario', id=usuario.id_usuario) }}">Editar</a>
+                {% if session.get('rol') == 'admin' and usuario.rol != 'admin' %}
+                <form method="POST" action="{{ url_for('usuarios.eliminar_usuario', id=usuario.id_usuario) }}" onsubmit="return confirm('¿Eliminar este usuario?');" style="display:inline;">
+                    {{ form.csrf_token }}
+                    <button type="submit" class="btn-eliminar">Eliminar</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4">No hay usuarios registrados.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

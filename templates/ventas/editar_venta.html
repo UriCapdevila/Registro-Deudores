@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Venta{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='editar_venta.css') }}">
+{% endblock %}
+
+{% block content %}
+<h2>Editar Venta #{{ venta.id_venta }}</h2>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="flash-messages">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+
+    <label for="cliente_id">{{ form.cliente_id.label }}</label>
+    {{ form.cliente_id(id="cliente_id", value=venta.cliente_id) }}
+    {% if form.cliente_id.errors %}
+        <p class="error">{{ form.cliente_id.errors[0] }}</p>
+    {% endif %}
+
+    <label for="fecha">{{ form.fecha.label }}</label>
+    {{ form.fecha(id="fecha", value=venta.fecha) }}
+    {% if form.fecha.errors %}
+        <p class="error">{{ form.fecha.errors[0] }}</p>
+    {% endif %}
+
+    <label for="total">{{ form.total.label }}</label>
+    {{ form.total(id="total", value=venta.total, step="0.01") }}
+    {% if form.total.errors %}
+        <p class="error">{{ form.total.errors[0] }}</p>
+    {% endif %}
+
+    {{ form.submit() }}
+</form>
+{% endblock %}

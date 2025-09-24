@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from database import get_db_connection
+from flask import Blueprint, render_template, redirect, url_for, flash, session
 from forms.productos_forms import ProductoForm
+from models import db, Producto
 
 productos_bp = Blueprint('productos', __name__)
 
@@ -10,12 +10,7 @@ def mostrar_productos():
         flash('Debés iniciar sesión para ver tus productos')
         return redirect(url_for('auth.login'))
 
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM productos WHERE id_usuario = %s", (session['id_usuario'],))
-    productos = cursor.fetchall()
-    conn.close()
-
+    productos = Producto.query.filter_by(usuario_id=session['id_usuario']).all()
     return render_template('productos/productos.html', productos=productos, current_year=2025)
 
 @productos_bp.route('/productos/agregar', methods=['GET', 'POST'])
@@ -27,21 +22,15 @@ def agregar_producto():
     form = ProductoForm()
 
     if form.validate_on_submit():
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("""
-            INSERT INTO productos (nombre_producto, precio, categoria, stock, descripcion, id_usuario)
-            VALUES (%s, %s, %s, %s, %s, %s)
-        """, (
-            form.nombre.data,
-            float(form.precio.data),
-            form.categoria.data,
-            form.stock.data or 0,
-            form.descripcion.data or '',
-            session['id_usuario']
-        ))
-        conn.commit()
-        conn.close()
+        nuevo_producto = Producto(
+            nombre=form.nombre.data,
+            tipo=form.tipo.data,
+            precio=form.precio.data,
+            stock=form.stock.data or 0,
+            usuario_id=session['id_usuario']
+        )
+        db.session.add(nuevo_producto)
+        db.session.commit()
         flash('Producto agregado correctamente')
         return redirect(url_for('productos.mostrar_productos'))
 
@@ -53,37 +42,24 @@ def editar_producto(id):
         flash('Debés iniciar sesión para editar productos')
         return redirect(url_for('auth.login'))
 
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-
-    cursor.execute("SELECT * FROM productos WHERE id_producto = %s AND id_usuario = %s", (id, session['id_usuario']))
-    producto = cursor.fetchone()
+    producto = Producto.query.filter_by(id_producto=id, usuario_id=session['id_usuario']).first()
 
     if not producto:
         flash('Producto no encontrado o no autorizado')
-        conn.close()
         return redirect(url_for('productos.mostrar_productos'))
 
-    if request.method == 'POST':
-        nombre = request.form.get('nombre')
-        precio = request.form.get('precio')
-        categoria = request.form.get('categoria')
-        stock = request.form.get('stock')
-        descripcion = request.form.get('descripcion')
+    form = ProductoForm(obj=producto)
 
-        cursor.execute("""
-            UPDATE productos
-            SET nombre_producto = %s, precio = %s, categoria = %s, stock = %s, descripcion = %s
-            WHERE id_producto = %s AND id_usuario = %s
-        """, (nombre, precio, categoria, stock, descripcion, id, session['id_usuario']))
-        conn.commit()
-        conn.close()
+    if form.validate_on_submit():
+        producto.nombre = form.nombre.data
+        producto.tipo = form.tipo.data
+        producto.precio = form.precio.data
+        producto.stock = form.stock.data
+        db.session.commit()
         flash('Producto actualizado correctamente')
         return redirect(url_for('productos.mostrar_productos'))
 
-    categorias = ['Bebidas', 'Alimentos', 'Electrónica', 'Higiene', 'Otros']
-    conn.close()
-    return render_template('productos/editar_producto.html', producto=producto, categorias=categorias, current_year=2025)
+    return render_template('productos/editar_producto.html', form=form, producto=producto, current_year=2025)
 
 @productos_bp.route('/productos/eliminar/<int:id>', methods=['POST'])
 def eliminar_producto(id):
@@ -91,11 +67,13 @@ def eliminar_producto(id):
         flash('Debés iniciar sesión para eliminar productos')
         return redirect(url_for('auth.login'))
 
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM productos WHERE id_producto = %s AND id_usuario = %s", (id, session['id_usuario']))
-    conn.commit()
-    conn.close()
+    producto = Producto.query.filter_by(id_producto=id, usuario_id=session['id_usuario']).first()
 
-    flash('Producto eliminado correctamente')
+    if producto:
+        db.session.delete(producto)
+        db.session.commit()
+        flash('Producto eliminado correctamente')
+    else:
+        flash('Producto no encontrado o no autorizado')
+
     return redirect(url_for('productos.mostrar_productos'))

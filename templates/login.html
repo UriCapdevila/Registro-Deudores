@@ -13,11 +13,17 @@
             <form method="POST" action="{{ url_for('auth.login') }}">
                 {{ form.hidden_tag() }}
 
-                <label for="username">{{ form.username.label }}</label>
-                {{ form.username(id="username", autocomplete="username") }}
+                <label for="email">{{ form.email.label }}</label>
+                {{ form.email(id="email", autocomplete="email") }}
+                {% for error in form.email.errors %}
+                    <span class="error">{{ error }}</span>
+                {% endfor %}
 
                 <label for="password">{{ form.password.label }}</label>
                 {{ form.password(id="password", autocomplete="current-password") }}
+                {% for error in form.password.errors %}
+                    <span class="error">{{ error }}</span>
+                {% endfor %}
 
                 {{ form.submit() }}
             </form>
@@ -25,6 +31,11 @@
             {% if error %}
                 <p class="error">{{ error }}</p>
             {% endif %}
+
+            <p class="registro-link">
+                ¿No tenés cuenta?
+                <a href="{{ url_for('auth.registro') }}">Registrate acá</a>
+            </p>
         </section>
     </main>
 

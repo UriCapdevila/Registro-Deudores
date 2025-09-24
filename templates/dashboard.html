@@ -1,38 +1,50 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Panel Principal</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
-</head>
-<body>
-    <header class="header">
-        <h1>Bienvenido, {{ session.get('usuario', 'Invitado') }}</h1>
-        <nav>
-            <a href="{{ url_for('clientes.mostrar_clientes') }}">Clientes</a>
-            <a href="{{ url_for('productos.mostrar_productos') }}">Productos</a>
-            <a href="{{ url_for('pedidos.mostrar_pedidos') }}">Pedidos</a>
-            <a href="{{ url_for('auth.confirmar_logout') }}">Cerrar sesión</a>
-        </nav>
-    </header>
+{% extends "base.html" %}
 
-    <main class="main-panel">
-        <section class="card">
-            <h2>Total de clientes</h2>
-            <p>{{ total_clientes }}</p>
-        </section>
-        <section class="card">
-            <h2>Total de productos</h2>
-            <p>{{ total_productos }}</p>
-        </section>
-        <section class="card">
-            <h2>Pedidos activos</h2>
-            <p>{{ pedidos_activos }}</p>
-        </section>
-    </main>
+{% block title %}Panel Principal{% endblock %}
 
-    <footer class="footer">
-        <p>© 2025 Uriel | Burzaco, Buenos Aires</p>
-    </footer>
-</body>
-</html>
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="card">
+    <h2>Total de clientes</h2>
+    <p>{{ total_clientes }}</p>
+</section>
+<section class="card">
+    <h2>Total de productos</h2>
+    <p>{{ total_productos }}</p>
+</section>
+<section class="card">
+    <h2>Total de ventas</h2>
+    <p>{{ total_ventas }}</p>
+</section>
+<section class="card">
+    <h2>Total de pagos</h2>
+    <p>{{ total_pagos }}</p>
+</section>
+
+<section class="card">
+    <h2>Ventas recientes</h2>
+    <ul>
+        {% for venta in ventas_recientes %}
+            <li>
+                Venta #{{ venta.id_venta }} - {{ venta.fecha|formatear_fecha }} - ${{ venta.total }}
+            </li>
+        {% endfor %}
+    </ul>
+</section>
+
+<section class="card">
+    <h2>Pagos recientes</h2>
+    <ul>
+        {% for pago in pagos_recientes %}
+            <li>
+                Pago #{{ pago.id_pago }} - {{ pago.fecha_pago|formatear_fecha }} - ${{ pago.monto }} -
+                {{ pago|estado_pago }}
+            </li>
+        {% endfor %}
+    </ul>
+    <p><strong>Total pagado:</strong> ${{ pagos_recientes|calcular_total_pagos }}</p>
+</section>
+{% endblock %}
