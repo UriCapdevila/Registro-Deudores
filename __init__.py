@@ -7,7 +7,7 @@ def create_app():
     app.secret_key = 'tu_clave_secreta'
 
     # 🔗 Configuración de base de datos
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///distribuidora_db.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://usuario:contraseña@localhost/distribuidora_db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # 🔧 Inicializar extensiones

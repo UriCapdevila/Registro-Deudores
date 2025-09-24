@@ -1,4 +1,4 @@
-from extensions import db  # ✅ Importar db desde extensions
+from extensions import db
 
 class Pago(db.Model):
     __tablename__ = 'pagos'
@@ -10,7 +10,7 @@ class Pago(db.Model):
     estado = db.Column(db.Enum('pendiente', 'parcial', 'completo', name='estado_pago'), nullable=False, default='pendiente')
     cuota_nro = db.Column(db.Integer)
 
-    venta = db.relationship('Venta', backref='pagos', lazy=True)
+    venta = db.relationship('Venta', back_populates='pagos')
 
     def __repr__(self):
         return f'<Pago {self.id_pago} - Venta {self.venta_id} - Estado {self.estado}>'
