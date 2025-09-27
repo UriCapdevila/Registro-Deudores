@@ -1,6 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
+from extensions import db  # ✅ Usa la instancia ya vinculada
 
 # Importar todos los modelos
 from .clientes import Cliente
