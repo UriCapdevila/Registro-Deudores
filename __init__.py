@@ -3,6 +3,8 @@ from utils.filters import formatear_fecha, calcular_total_pagos, estado_pago
 from extensions import db
 from config import Config
 from sqlalchemy import text
+from flask_debugtoolbar import DebugToolbarExtension
+toolbar = DebugToolbarExtension()
 
 def create_app():
     app = Flask(__name__)
@@ -10,6 +12,7 @@ def create_app():
 
     # 🔧 Inicializar extensiones
     db.init_app(app)
+    toolbar.init_app(app)
 
     # 🎨 Filtros personalizados
     app.jinja_env.filters['formatear_fecha'] = formatear_fecha
