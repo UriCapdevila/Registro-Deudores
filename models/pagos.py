@@ -3,6 +3,8 @@ from extensions import db
 class Pago(db.Model):
     __tablename__ = 'pagos'
 
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id_usuario'), nullable=False)
+    usuario = db.relationship('Usuario', backref='pagos', lazy=True)
     id_pago = db.Column(db.Integer, primary_key=True)
     venta_id = db.Column(db.Integer, db.ForeignKey('ventas.id_venta'), nullable=False)
     fecha_pago = db.Column(db.Date, nullable=False)

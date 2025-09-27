@@ -19,8 +19,7 @@ def dashboard():
     total_pagos = Pago.query.filter_by(usuario_id=id_usuario).count()
 
     # Ventas recientes
-    ventas_recientes = Venta.query.filter_by(usuario_id=id_usuario).order_by(Venta.fecha.desc()).limit(5).all()
-
+    ventas_recientes = Venta.query.filter_by(usuario_id=id_usuario).order_by(Venta.fecha_venta.desc()).limit(5).all()
     # Pagos recientes
     pagos_recientes = Pago.query.filter_by(usuario_id=id_usuario).order_by(Pago.fecha_pago.desc()).limit(5).all()
 

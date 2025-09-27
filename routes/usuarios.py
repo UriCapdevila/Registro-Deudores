@@ -2,8 +2,15 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from models import db, Usuario
 from forms.usuario_form import UsuarioForm
+from utils.decorators import admin_required
 
 usuarios_bp = Blueprint('usuarios', __name__, url_prefix='/usuarios')
+
+@usuarios_bp.route('/gestion')
+@admin_required
+def gestion():
+    usuarios = Usuario.query.all()
+    return render_template('usuarios/gestion.html', usuarios=usuarios)
 
 @usuarios_bp.route('/')
 def listar_usuarios():

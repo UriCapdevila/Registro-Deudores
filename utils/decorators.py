@@ -1,31 +1,26 @@
+from flask import redirect, url_for, flash
+from flask_login import current_user
 from functools import wraps
-from flask import session, redirect, url_for, flash
 
+# Solo permite acceso a administradores
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if session.get('rol') != 'admin':
-            flash('Acceso restringido a administradores')
-            return redirect(url_for('dashboard.dashboard'))
+        if not current_user.is_authenticated or current_user.rol != 'admin':
+            flash('Acceso restringido: solo administradores', 'danger')
+            return redirect(url_for('dashboard'))
         return f(*args, **kwargs)
     return decorated_function
 
+# Permite acceso solo a usuarios con rol específico
 def rol_required(rol):
     def wrapper(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            if session.get('rol') != rol:
-                flash(f'Acceso restringido a usuarios con rol: {rol}')
-                return redirect(url_for('dashboard.dashboard'))
+            if not current_user.is_authenticated or current_user.rol != rol:
+                flash(f'Acceso restringido a usuarios con rol: {rol}', 'danger')
+                return redirect(url_for('dashboard'))
             return f(*args, **kwargs)
         return decorated_function
     return wrapper
 
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'id_usuario' not in session:
-            flash('Debés iniciar sesión para acceder')
-            return redirect(url_for('auth.login'))
-        return f(*args, **kwargs)
-    return decorated_function
