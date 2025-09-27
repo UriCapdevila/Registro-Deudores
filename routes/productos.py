@@ -11,7 +11,9 @@ def mostrar_productos():
         return redirect(url_for('auth.login'))
 
     productos = Producto.query.filter_by(usuario_id=session['id_usuario']).all()
-    return render_template('productos/productos.html', productos=productos, current_year=2025)
+    form = ProductoForm()  # ✅ Se agregó el formulario
+
+    return render_template('productos/productos.html', productos=productos, form=form, current_year=2025)
 
 @productos_bp.route('/productos/agregar', methods=['GET', 'POST'])
 def agregar_producto():
@@ -27,6 +29,7 @@ def agregar_producto():
             tipo=form.tipo.data,
             precio=form.precio.data,
             stock=form.stock.data or 0,
+            descripcion=form.descripcion.data,
             usuario_id=session['id_usuario']
         )
         db.session.add(nuevo_producto)
@@ -55,6 +58,7 @@ def editar_producto(id):
         producto.tipo = form.tipo.data
         producto.precio = form.precio.data
         producto.stock = form.stock.data
+        producto.descripcion = form.descripcion.data
         db.session.commit()
         flash('Producto actualizado correctamente')
         return redirect(url_for('productos.mostrar_productos'))
