@@ -9,5 +9,9 @@ class Producto(db.Model):
     precio = db.Column(db.Numeric(10, 2), nullable=False)
     stock = db.Column(db.Integer, nullable=False)
 
+    # 🔗 Relación con Usuario
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id_usuario'), nullable=False)
+    usuario = db.relationship('Usuario', backref='productos', lazy=True)
+
     def __repr__(self):
         return f'<Producto {self.nombre} - Stock {self.stock}>'
