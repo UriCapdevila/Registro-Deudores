@@ -19,16 +19,28 @@
     {% endif %}
 {% endwith %}
 
-<form method="POST" action="{{ url_for('productos.agregar_producto') }}" class="form-agregar-producto">
-    {{ form.hidden_tag() }}
+<form method="POST" action="{{ url_for('productos.mostrar_productos') }}" class="form-agregar-producto">
+    {{ form_agregar.hidden_tag() }}
 
-    {{ form.nombre.label }} {{ form.nombre() }}
-    {{ form.precio.label }} {{ form.precio(step="0.01") }}
-    {{ form.categoria.label }} {{ form.categoria() }}
-    {{ form.stock.label }} {{ form.stock() }}
-    {{ form.descripcion.label }} {{ form.descripcion() }}
+    <div class="form-group">
+        {{ form_agregar.nombre.label }} {{ form_agregar.nombre() }}
+    </div>
+    <div class="form-group">
+        {{ form_agregar.precio.label }} {{ form_agregar.precio(step="0.01") }}
+    </div>
+    <div class="form-group">
+        {{ form_agregar.categoria.label }} {{ form_agregar.categoria() }}
+    </div>
+    <div class="form-group">
+        {{ form_agregar.stock.label }} {{ form_agregar.stock() }}
+    </div>
+    <div class="form-group">
+        {{ form_agregar.descripcion.label }} {{ form_agregar.descripcion() }}
+    </div>
 
-    {{ form.submit() }}
+    <div class="form-group">
+        {{ form_agregar.submit() }}
+    </div>
 </form>
 
 <h2>Listado de productos</h2>
@@ -54,7 +66,7 @@
             <td><a href="{{ url_for('productos.editar_producto', id=producto.id_producto) }}">Editar</a></td>
             <td>
                 <form method="POST" action="{{ url_for('productos.eliminar_producto', id=producto.id_producto) }}" onsubmit="return confirm('¿Eliminar este producto?');">
-                    {{ form.csrf_token }}
+                    {{ form_eliminar.csrf_token }}
                     <button type="submit" class="btn-eliminar">Eliminar</button>
                 </form>
             </td>

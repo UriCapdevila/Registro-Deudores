@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, session, url_for, flash
-from forms.auth_forms import LoginForm, RegistroForm
+from forms.auth_forms import LoginForm, RegistroForm, ConfirmarLogoutForm  # ✅ Importamos el nuevo formulario
 from models import db, Usuario
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -23,7 +23,7 @@ def login():
         if usuario and check_password_hash(usuario.contraseña, password):
             session['usuario'] = usuario.nombre
             session['id_usuario'] = usuario.id_usuario
-            session['rol'] = usuario.rol  # ✅ Guardamos el rol
+            session['rol'] = usuario.rol
             flash(f"Bienvenido, {usuario.nombre}")
             return redirect(url_for('dashboard.dashboard'))
         else:
@@ -47,7 +47,7 @@ def registro():
                 nombre=form.nombre.data,
                 email=email,
                 contraseña=generate_password_hash(form.password.data),
-                rol=form.rol.data,  # ✅ Rol desde el formulario
+                rol=form.rol.data,
                 activo=True
             )
             db.session.add(nuevo_usuario)
@@ -55,7 +55,7 @@ def registro():
 
             session['usuario'] = nuevo_usuario.nombre
             session['id_usuario'] = nuevo_usuario.id_usuario
-            session['rol'] = nuevo_usuario.rol  # ✅ Guardamos el rol
+            session['rol'] = nuevo_usuario.rol
             flash("Registro exitoso. Sesión iniciada.")
             return redirect(url_for('dashboard.dashboard'))
 
@@ -65,14 +65,16 @@ def registro():
 def confirmar_logout():
     if 'usuario' not in session:
         return redirect(url_for('auth.login'))
-    return render_template('confirmar_logout.html', usuario=session['usuario'])
+
+    form = ConfirmarLogoutForm()  # ✅ Instanciamos el formulario
+    return render_template('confirmar_logout.html', usuario=session['usuario'], form=form)
 
 @auth_bp.route('/logout', methods=['POST'])
 def logout():
     usuario = session.get('usuario')
     session.pop('usuario', None)
     session.pop('id_usuario', None)
-    session.pop('rol', None)  # ✅ Limpiamos el rol también
+    session.pop('rol', None)
     print(f"Usuario '{usuario}' cerró sesión.")
     flash("Sesión cerrada correctamente.")
     return redirect(url_for('auth.login'))

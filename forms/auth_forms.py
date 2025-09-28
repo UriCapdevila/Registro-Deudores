@@ -13,3 +13,6 @@ class RegistroForm(FlaskForm):
     password = PasswordField('Contraseña', validators=[DataRequired(), Length(min=6)])
     rol = SelectField('Rol', choices=[('cliente', 'Cliente'), ('admin', 'Administrador')], default='cliente')
     submit = SubmitField('Registrarse')
+
+class ConfirmarLogoutForm(FlaskForm):  # ✅ Nuevo formulario para confirmar logout
+    submit = SubmitField('Cerrar sesión')
