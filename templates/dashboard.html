@@ -29,7 +29,7 @@
     <ul>
         {% for venta in ventas_recientes %}
             <li>
-                Venta #{{ venta.id_venta }} - {{ venta.fecha|formatear_fecha }} - ${{ venta.total }}
+                Venta #{{ venta.id_venta }} - {{ venta.fecha|formatear_fecha }} - ${{ "%.2f"|format(venta.total) }}
             </li>
         {% endfor %}
     </ul>
@@ -40,11 +40,11 @@
     <ul>
         {% for pago in pagos_recientes %}
             <li>
-                Pago #{{ pago.id_pago }} - {{ pago.fecha_pago|formatear_fecha }} - ${{ pago.monto }} -
-                {{ pago|estado_pago }}
+                Pago #{{ pago.id_pago }} - {{ pago.fecha_pago|formatear_fecha }} - ${{ "%.2f"|format(pago.monto) }} -
+                {{ estado_pago(pago) }}
             </li>
         {% endfor %}
     </ul>
-    <p><strong>Total pagado:</strong> ${{ pagos_recientes|calcular_total_pagos }}</p>
+    <p><strong>Total pagado:</strong> ${{ "%.2f"|format(calcular_total_pagos(pagos_recientes)) }}</p>
 </section>
 {% endblock %}

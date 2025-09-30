@@ -1,4 +1,3 @@
-from extensions import db
 from flask_wtf import FlaskForm
 from wtforms import DecimalField, DateField, SelectField, IntegerField, SubmitField
 from wtforms.validators import DataRequired, NumberRange, Optional
@@ -12,4 +11,5 @@ class PagoForm(FlaskForm):
         ('completo', 'Completo')
     ], validators=[DataRequired()])
     cuota_nro = IntegerField('Número de cuota', validators=[Optional()])
+    venta_id = SelectField('Venta asociada', coerce=int, validators=[DataRequired()])
     submit = SubmitField('Registrar pago')

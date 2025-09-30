@@ -34,16 +34,20 @@
     <tr>
         <th>Venta</th><th>Fecha</th><th>Monto</th><th>Estado</th><th>Cuota</th><th>Acciones</th>
     </tr>
-    {% for pago in pagos %}
+    {% for pago, venta in pagos %}
     <tr>
-        <td>#{{ pago.venta_id }}</td>
+        <td>#{{ venta.id_venta }}</td>
         <td>{{ pago.fecha_pago|formatear_fecha }}</td>
-        <td>${{ pago.monto }}</td>
-        <td>{{ pago|estado_pago }}</td>
+        <td>${{ "%.2f"|format(pago.monto) }}</td>
+        <td>{{ estado_pago(pago) }}</td>
         <td>{{ pago.cuota_nro }}</td>
         <td>
             <a href="{{ url_for('pagos.editar_pago', id=pago.id_pago) }}">Editar</a>
         </td>
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="6">No hay pagos registrados.</td>
     </tr>
     {% endfor %}
 </table>

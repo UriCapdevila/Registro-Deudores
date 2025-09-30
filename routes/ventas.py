@@ -12,13 +12,14 @@ def mostrar_ventas():
 
     form = VentaForm()
     form.cliente_id.choices = [
-        (c.id_cliente, c.nombre) for c in Cliente.query.filter_by(usuario_id=session['id_usuario']).order_by(Cliente.nombre.asc()).all()
+        (c.id_cliente, c.nombre)
+        for c in Cliente.query.filter_by(usuario_id=session['id_usuario']).order_by(Cliente.nombre.asc()).all()
     ]
 
     if form.validate_on_submit():
         nueva_venta = Venta(
             cliente_id=form.cliente_id.data,
-            fecha=form.fecha.data,
+            fecha_venta=form.fecha.data,  # ✅ campo correcto
             total=form.total.data,
             usuario_id=session['id_usuario']
         )
@@ -31,7 +32,7 @@ def mostrar_ventas():
         db.session.query(Venta, Cliente)
         .join(Cliente, Venta.cliente_id == Cliente.id_cliente)
         .filter(Venta.usuario_id == session['id_usuario'])
-        .order_by(Venta.fecha.desc())
+        .order_by(Venta.fecha_venta.desc())  # ✅ campo correcto
         .all()
     )
 
@@ -51,12 +52,13 @@ def editar_venta(id):
 
     form = VentaForm(obj=venta)
     form.cliente_id.choices = [
-        (c.id_cliente, c.nombre) for c in Cliente.query.filter_by(usuario_id=session['id_usuario']).order_by(Cliente.nombre.asc()).all()
+        (c.id_cliente, c.nombre)
+        for c in Cliente.query.filter_by(usuario_id=session['id_usuario']).order_by(Cliente.nombre.asc()).all()
     ]
 
     if form.validate_on_submit():
         venta.cliente_id = form.cliente_id.data
-        venta.fecha = form.fecha.data
+        venta.fecha_venta = form.fecha.data  # ✅ campo correcto
         venta.total = form.total.data
         db.session.commit()
         flash('Venta actualizada correctamente')

@@ -19,7 +19,7 @@
     {% endif %}
 {% endwith %}
 
-<form method="POST" action="{{ url_for('ventas.agregar_venta') }}" class="form-agregar-venta">
+<form method="POST" action="{{ url_for('ventas.mostrar_ventas') }}" class="form-agregar-venta">
     {{ form.hidden_tag() }}
 
     <label for="cliente_id">{{ form.cliente_id.label }}</label>
@@ -46,11 +46,11 @@
         </tr>
     </thead>
     <tbody>
-        {% for venta in ventas %}
+        {% for venta, cliente in ventas %}
         <tr>
             <td>#{{ venta.id_venta }}</td>
-            <td>{{ venta.fecha|formatear_fecha }}</td>
-            <td>{{ venta.cliente.nombre }}</td>
+            <td>{{ venta.fecha_venta|formatear_fecha }}</td>
+            <td>{{ cliente.nombre }}</td>
             <td>${{ "%.2f"|format(venta.total) }}</td>
             <td>
                 <a href="{{ url_for('ventas.editar_venta', id=venta.id_venta) }}">Editar</a>

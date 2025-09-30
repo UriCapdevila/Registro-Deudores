@@ -16,8 +16,10 @@ def create_app():
 
     # 🎨 Filtros personalizados
     app.jinja_env.filters['formatear_fecha'] = formatear_fecha
-    app.jinja_env.filters['calcular_total_pagos'] = calcular_total_pagos
-    app.jinja_env.filters['estado_pago'] = estado_pago
+    
+    # 🧠 Funciones globales para Jinja
+    app.jinja_env.globals['estado_pago'] = estado_pago
+    app.jinja_env.globals['calcular_total_pagos'] = calcular_total_pagos
 
     # 🧪 Test de conexión
     with app.app_context():
