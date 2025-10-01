@@ -3,9 +3,6 @@ from extensions import db, login_manager
 from utils.filters import formatear_fecha, calcular_total_pagos, estado_pago
 from config import Config
 from sqlalchemy import text
-from flask_debugtoolbar import DebugToolbarExtension
-
-toolbar = DebugToolbarExtension()
 
 def create_app():
     app = Flask(__name__)
@@ -13,11 +10,10 @@ def create_app():
 
     # 🔧 Inicializar extensiones
     db.init_app(app)
-    login_manager.init_app(app)  # ✅ Faltaba esta línea
-    toolbar.init_app(app)
+    login_manager.init_app(app)
 
     # 🔐 Configuración de Flask-Login
-    login_manager.login_view = 'auth.login'  # Redirección si no está logueado
+    login_manager.login_view = 'auth.login'
     login_manager.login_message = 'Debés iniciar sesión para acceder a esta vista'
 
     # 🎨 Filtros personalizados

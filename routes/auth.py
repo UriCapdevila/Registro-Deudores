@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, session, url_for, flash
-from forms.auth_forms import LoginForm, RegistroForm, ConfirmarLogoutForm  # ✅ Importamos el nuevo formulario
+from forms.auth_forms import LoginForm, RegistroForm, ConfirmarLogoutForm
 from models import db, Usuario
 from flask_login import login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -50,7 +50,7 @@ def registro():
                 nombre=form.nombre.data,
                 email=email,
                 contraseña=generate_password_hash(form.password.data),
-                rol=form.rol.data,
+                rol="cliente",  # ✅ Rol fijo para todos los registros
                 activo=True
             )
             db.session.add(nuevo_usuario)
@@ -69,14 +69,14 @@ def confirmar_logout():
     if 'usuario' not in session:
         return redirect(url_for('auth.login'))
 
-    form = ConfirmarLogoutForm()  # ✅ Instanciamos el formulario
+    form = ConfirmarLogoutForm()
     return render_template('confirmar_logout.html', usuario=session['usuario'], form=form)
 
 @auth_bp.route('/logout', methods=['POST'])
 def logout():
     usuario = session.get('usuario')
-    logout_user()  # ✅ Cierra sesión de Flask-Login
-    session.clear()  # Limpia toda la sesión
+    logout_user()
+    session.clear()
     print(f"Usuario '{usuario}' cerró sesión.")
     flash("Sesión cerrada correctamente.")
     return redirect(url_for('auth.login'))

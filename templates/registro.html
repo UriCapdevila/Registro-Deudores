@@ -1,62 +1,41 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Registro de Usuario</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
-</head>
-<body>
-    <main class="login-wrapper">
-        <section class="login-box">
-            <h2>Crear cuenta</h2>
-            <form method="POST" action="{{ url_for('auth.registro') }}">
-                {{ form.hidden_tag() }}
+{% extends "base.html" %}
 
-                <label for="nombre">{{ form.nombre.label }}</label>
-                {{ form.nombre(id="nombre", autocomplete="name") }}
-                {% for error in form.nombre.errors %}
-                    <p class="error">{{ error }}</p>
+{% block title %}Registro de usuario{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <h2>Crear nueva cuenta</h2>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="flash-messages">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
                 {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
 
-                <label for="email">{{ form.email.label }}</label>
-                {{ form.email(id="email", autocomplete="email") }}
-                {% for error in form.email.errors %}
-                    <p class="error">{{ error }}</p>
-                {% endfor %}
+    <form method="POST" action="{{ url_for('auth.registro') }}">
+        {{ form.hidden_tag() }}
 
-                <label for="password">{{ form.password.label }}</label>
-                {{ form.password(id="password", autocomplete="new-password") }}
-                {% for error in form.password.errors %}
-                    <p class="error">{{ error }}</p>
-                {% endfor %}
+        <div class="form-group">
+            {{ form.nombre.label }} {{ form.nombre(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.email.label }} {{ form.email(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.password.label }} {{ form.password(class="form-control") }}
+        </div>
 
-                <label for="rol">{{ form.rol.label }}</label>
-                {{ form.rol(id="rol") }}
-                {% for error in form.rol.errors %}
-                    <p class="error">{{ error }}</p>
-                {% endfor %}
+        <div class="form-group">
+            {{ form.submit(class="btn-agregar") }}
+        </div>
+    </form>
 
-                {{ form.submit() }}
-            </form>
-
-            {% if error %}
-                <p class="error">{{ error }}</p>
-            {% endif %}
-
-            <p class="registro-link">
-                ¿Ya tenés cuenta?
-                <a href="{{ url_for('auth.login') }}">Iniciar sesión</a>
-            </p>
-        </section>
-    </main>
-
-    <footer class="footer">
-        <p>© 2025 Uriel | Burzaco, Buenos Aires |
-            <a href="mailto:{{ contact_email | default('uriel@email.com') }}">
-                {{ contact_email | default('uriel@email.com') }}
-            </a>
-        </p>
-    </footer>
-</body>
-</html>
+    <p class="registro-link">
+        ¿Ya tenés cuenta? <a href="{{ url_for('auth.login') }}">Iniciá sesión acá</a>
+    </p>
+</div>
+{% endblock %}

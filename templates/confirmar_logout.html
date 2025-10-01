@@ -1,23 +1,15 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Confirmar cierre de sesión</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='logout.css') }}">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
-</head>
-<body>
-    <main class="logout-box">
-        <h2>¿Cerrar sesión, {{ usuario }}?</h2>
-        <form method="POST" action="{{ url_for('auth.logout') }}">
-            {{ form.hidden_tag() }}
-            <button type="submit">Sí, cerrar sesión</button>
-        </form>
-        <a href="{{ url_for('dashboard.dashboard') }}">Cancelar</a>
-    </main>
+{% extends "base.html" %}
 
-    <footer class="footer">
-        <p>© 2025 Uriel | Burzaco, Buenos Aires</p>
-    </footer>
-</body>
-</html>
+{% block title %}Confirmar cierre de sesión{% endblock %}
+
+{% block content %}
+<div class="logout-confirm-container">
+    <h2>¿Estás seguro de que querés cerrar sesión?</h2>
+
+    <form method="POST" action="{{ url_for('auth.logout') }}">
+        {{ form.hidden_tag() }}
+        <button type="submit" class="btn-agregar">Cerrar sesión</button>
+        <a href="{{ url_for('dashboard.dashboard') }}" class="btn-cancelar">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

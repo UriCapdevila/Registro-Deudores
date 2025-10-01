@@ -10,17 +10,20 @@
 <body>
     <header class="header">
         <div class="logo">Bienvenido, {{ session.get('usuario', 'Invitado') }}</div>
+
+        {% if session.get('id_usuario') %}
         <nav class="navbar">
             <a href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
             <a href="{{ url_for('clientes.mostrar_clientes') }}">Clientes</a>
             <a href="{{ url_for('productos.mostrar_productos') }}">Productos</a>
             <a href="{{ url_for('ventas.mostrar_ventas') }}">Ventas</a>
             <a href="{{ url_for('pagos.mostrar_pagos') }}">Pagos</a>
-            {% if session.get('rol') == 'admin' and session.get('id_usuario') %}
+            {% if session.get('rol') == 'admin' %}
                 <a href="{{ url_for('usuarios.gestion', id=session['id_usuario']) }}">Usuarios</a>
             {% endif %}
             <a href="{{ url_for('auth.confirmar_logout') }}">Cerrar sesión</a>
         </nav>
+        {% endif %}
     </header>
 
     <main class="main-panel container">
@@ -34,9 +37,7 @@
             {% endif %}
         {% endwith %}
 
-        {% block content %}
-        <!-- Contenido específico de cada vista -->
-        {% endblock %}
+        {% block content %}{% endblock %}
     </main>
 
     <footer class="footer">
