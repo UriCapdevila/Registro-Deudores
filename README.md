@@ -1,10 +1,10 @@
-# Registro de Deudores
+# ClienTrack
 
-Sistema web para gestionar clientes, productos, ventas y pagos. Desarrollado con Flask, SQLAlchemy y Jinja2, con enfoque modular y visual profesional.
+Sistema web modular para gestionar clientes, productos, ventas y pagos. Desarrollado con Flask, SQLAlchemy y Jinja2, con enfoque profesional, visual y escalable.
 
 ## 🚀 Características
 
-- Gestión de usuarios con roles (admin y cliente)
+- Gestión de usuarios con rol fijo (cliente)
 - Registro y login con validaciones
 - Panel de control con navegación clara
 - Módulos independientes para clientes, productos, ventas y pagos
@@ -19,3 +19,4 @@ Sistema web para gestionar clientes, productos, ventas y pagos. Desarrollado con
 - Jinja2
 - HTML + CSS modular
 - Gunicorn (para producción)
+
