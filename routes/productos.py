@@ -15,17 +15,26 @@ def mostrar_productos():
     form_eliminar = ConfirmarLogoutForm()
 
     if form_agregar.validate_on_submit():
-        nuevo_producto = Producto(
-            nombre=form_agregar.nombre.data,
-            tipo=form_agregar.tipo.data,
-            precio=form_agregar.precio.data,
-            stock=form_agregar.stock.data or 0,
-            descripcion=form_agregar.descripcion.data,
-            usuario_id=session['id_usuario']
-        )
-        db.session.add(nuevo_producto)
-        db.session.commit()
-        flash('Producto agregado correctamente')
+        try:
+            # ✅ Normalizar precio: convertir coma a punto
+            precio_raw = str(form_agregar.precio.data).replace(',', '.')
+            precio_normalizado = float(precio_raw)
+
+            nuevo_producto = Producto(
+                nombre=form_agregar.nombre.data,
+                tipo=form_agregar.tipo.data,
+                precio=precio_normalizado,
+                stock=form_agregar.stock.data or 0,
+                descripcion=form_agregar.descripcion.data,
+                usuario_id=session['id_usuario']
+            )
+            db.session.add(nuevo_producto)
+            db.session.commit()
+            flash('Producto agregado correctamente')
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error al registrar producto: {e}')
+
         return redirect(url_for('productos.mostrar_productos'))
 
     productos = Producto.query.filter_by(usuario_id=session['id_usuario']).all()
@@ -53,13 +62,21 @@ def editar_producto(id):
     form = ProductoForm(obj=producto)
 
     if form.validate_on_submit():
-        producto.nombre = form.nombre.data
-        producto.tipo = form.tipo.data
-        producto.precio = form.precio.data
-        producto.stock = form.stock.data
-        producto.descripcion = form.descripcion.data
-        db.session.commit()
-        flash('Producto actualizado correctamente')
+        try:
+            precio_raw = str(form.precio.data).replace(',', '.')
+            producto.precio = float(precio_raw)
+
+            producto.nombre = form.nombre.data
+            producto.tipo = form.tipo.data
+            producto.stock = form.stock.data
+            producto.descripcion = form.descripcion.data
+
+            db.session.commit()
+            flash('Producto actualizado correctamente')
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error al actualizar producto: {e}')
+
         return redirect(url_for('productos.mostrar_productos'))
 
     return render_template('productos/editar_producto.html', form=form, producto=producto, current_year=2025)

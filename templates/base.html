@@ -9,8 +9,8 @@
 </head>
 <body>
     <header class="header">
-        <h1>Bienvenido, {{ session.get('usuario', 'Invitado') }}</h1>
-        <nav>
+        <div class="logo">Bienvenido, {{ session.get('usuario', 'Invitado') }}</div>
+        <nav class="navbar">
             <a href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
             <a href="{{ url_for('clientes.mostrar_clientes') }}">Clientes</a>
             <a href="{{ url_for('productos.mostrar_productos') }}">Productos</a>
@@ -23,7 +23,7 @@
         </nav>
     </header>
 
-    <main class="main-panel">
+    <main class="main-panel container">
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <ul class="flash-messages">

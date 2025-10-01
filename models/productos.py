@@ -13,8 +13,8 @@ class Producto(db.Model):
     fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow)
     activo = db.Column(db.Boolean, default=True)
 
-    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id_usuario'), nullable=False)
-    usuario = db.relationship('Usuario', backref=db.backref('productos', lazy=True))
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id_usuario', ondelete='CASCADE'), nullable=False)
+    usuario = db.relationship('Usuario', back_populates='productos', lazy=True)
 
     def __repr__(self):
         return f'<Producto {self.nombre} - Stock {self.stock} - Activo {self.activo}>'

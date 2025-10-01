@@ -4,8 +4,8 @@ class DetalleVenta(db.Model):
     __tablename__ = 'detalle_venta'
 
     id_detalle = db.Column(db.Integer, primary_key=True)
-    venta_id = db.Column(db.Integer, db.ForeignKey('ventas.id_venta'), nullable=False)
-    producto_id = db.Column(db.Integer, db.ForeignKey('productos.id_producto'), nullable=False)
+    venta_id = db.Column(db.Integer, db.ForeignKey('ventas.id_venta', ondelete='CASCADE'), nullable=False)
+    producto_id = db.Column(db.Integer, db.ForeignKey('productos.id_producto', ondelete='CASCADE'), nullable=False)
     cantidad = db.Column(db.Integer, nullable=False)
     precio_unit = db.Column(db.Numeric(10, 2), nullable=False)
 

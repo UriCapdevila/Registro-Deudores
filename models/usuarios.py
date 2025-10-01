@@ -11,6 +11,12 @@ class Usuario(db.Model, UserMixin):
     rol = db.Column(db.Enum('admin', 'cliente', name='rol_usuario'), nullable=False, default='cliente')
     activo = db.Column(db.Boolean, default=True)
 
+    # Relaciones en cascada con back_populates
+    ventas = db.relationship('Venta', back_populates='usuario', cascade='all, delete-orphan', passive_deletes=True)
+    pagos = db.relationship('Pago', back_populates='usuario', cascade='all, delete-orphan', passive_deletes=True)
+    clientes = db.relationship('Cliente', back_populates='usuario', cascade='all, delete-orphan', passive_deletes=True)
+    productos = db.relationship('Producto', back_populates='usuario', cascade='all, delete-orphan', passive_deletes=True)
+
     def __repr__(self):
         return f'<Usuario {self.email} - Rol {self.rol}>'
 

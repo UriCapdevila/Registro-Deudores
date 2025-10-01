@@ -31,8 +31,8 @@ body {
     flex-wrap: wrap;
 }
 
-.header .logo {
-    font-size: 1.5rem;
+.logo {
+    font-size: 1.25rem;
     font-weight: bold;
 }
 
@@ -61,6 +61,11 @@ body {
     gap: 2rem;
 }
 
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
 /* === FLASH MESSAGES === */
 .flash-messages {
     list-style: none;
@@ -75,6 +80,12 @@ body {
     border-radius: 5px;
     margin-bottom: 0.5rem;
     box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* === BUTTONS === */
@@ -91,6 +102,19 @@ button, .btn-eliminar, .btn-agregar {
 
 button:hover, .btn-eliminar:hover, .btn-agregar:hover {
     background-color: #2980b9;
+}
+
+.btn-secundario {
+    background-color: #95a5a6;
+}
+
+.btn-secundario:hover {
+    background-color: #7f8c8d;
+}
+
+button:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
 }
 
 /* === FORMS === */
@@ -111,9 +135,24 @@ input, select, textarea {
     font-size: 1rem;
 }
 
+input:focus, select:focus, textarea:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 3px rgba(52, 152, 219, 0.5);
+}
+
+input.error, select.error, textarea.error {
+    border-color: #e74c3c;
+    background-color: #fdecea;
+}
+
 textarea {
     resize: vertical;
     min-height: 80px;
+}
+
+.form-agregar-producto {
+    margin-bottom: 2rem;
 }
 
 /* === TABLES === */
@@ -145,6 +184,11 @@ tr:nth-child(even) {
     text-align: center;
     padding: 1rem;
     font-size: 0.9rem;
+}
+
+/* === HEADINGS === */
+h1, h2, h3 {
+    margin-bottom: 1rem;
 }
 
 /* === RESPONSIVE === */

@@ -1,6 +1,4 @@
-from flask_sqlalchemy import SQLAlchemy
-
-from extensions import db  # ✅
+from extensions import db
 
 class Cliente(db.Model):
     __tablename__ = 'clientes'
@@ -10,10 +8,10 @@ class Cliente(db.Model):
     dni = db.Column(db.String(20), unique=True, nullable=False)
     direccion = db.Column(db.String(150))
     telefono = db.Column(db.String(20))
-    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id_usuario'))
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id_usuario', ondelete='CASCADE'), nullable=False)
 
-    usuario = db.relationship('Usuario', backref='clientes', lazy=True)
-    ventas = db.relationship('Venta', backref='cliente', lazy=True)
+    usuario = db.relationship('Usuario', back_populates='clientes', lazy=True)
+    ventas = db.relationship('Venta', back_populates='cliente', cascade='all, delete-orphan', passive_deletes=True)
 
     def __repr__(self):
         return f'<Cliente {self.nombre} - DNI {self.dni}>'

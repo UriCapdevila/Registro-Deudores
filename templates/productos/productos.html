@@ -29,7 +29,7 @@
         {{ form_agregar.precio.label }} {{ form_agregar.precio(step="0.01") }}
     </div>
     <div class="form-group">
-        {{ form_agregar.categoria.label }} {{ form_agregar.categoria() }}
+        {{ form_agregar.tipo.label }} {{ form_agregar.tipo() }}
     </div>
     <div class="form-group">
         {{ form_agregar.stock.label }} {{ form_agregar.stock() }}
@@ -49,7 +49,7 @@
         <tr>
             <th>Nombre</th>
             <th>Precio</th>
-            <th>Categoría</th>
+            <th>Tipo</th>
             <th>Stock</th>
             <th>Descripción</th>
             <th colspan="2">Acciones</th>
@@ -60,7 +60,7 @@
         <tr>
             <td>{{ producto.nombre }}</td>
             <td>${{ "%.2f"|format(producto.precio) }}</td>
-            <td>{{ producto.categoria or '—' }}</td>
+            <td>{{ producto.tipo or '—' }}</td>
             <td>{{ producto.stock or 0 }}</td>
             <td>{{ producto.descripcion or '—' }}</td>
             <td><a href="{{ url_for('productos.editar_producto', id=producto.id_producto) }}">Editar</a></td>
