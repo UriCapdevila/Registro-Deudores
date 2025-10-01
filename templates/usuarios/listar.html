@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Listado de Usuarios{% endblock %}
+
+{% block content %}
+<h2>Usuarios registrados</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for usuario in usuarios %}
+        <tr>
+            <td>{{ usuario.id_usuario }}</td>
+            <td>{{ usuario.nombre }}</td>
+            <td>{{ usuario.email }}</td>
+            <td>{{ usuario.rol }}</td>
+            <td>
+                <a href="{{ url_for('usuarios.gestion', id=usuario.id_usuario) }}">Editar</a>
+                <form method="POST" action="{{ url_for('usuarios.eliminar_usuario', id=usuario.id_usuario) }}" style="display:inline;">
+                    <button type="submit">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

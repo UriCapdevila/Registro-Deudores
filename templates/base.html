@@ -16,8 +16,8 @@
             <a href="{{ url_for('productos.mostrar_productos') }}">Productos</a>
             <a href="{{ url_for('ventas.mostrar_ventas') }}">Ventas</a>
             <a href="{{ url_for('pagos.mostrar_pagos') }}">Pagos</a>
-            {% if session.get('rol') == 'admin' %}
-                <a href="{{ url_for('usuarios.gestion') }}">Usuarios</a>
+            {% if session.get('rol') == 'admin' and session.get('id_usuario') %}
+                <a href="{{ url_for('usuarios.gestion', id=session['id_usuario']) }}">Usuarios</a>
             {% endif %}
             <a href="{{ url_for('auth.confirmar_logout') }}">Cerrar sesión</a>
         </nav>
@@ -38,11 +38,11 @@
         <!-- Contenido específico de cada vista -->
         {% endblock %}
     </main>
-</body>
 
     <footer class="footer">
         <p>© 2025 Uriel | Burzaco, Buenos Aires</p>
     </footer>
 
     {% block extra_scripts %}{% endblock %}
+</body>
 </html>

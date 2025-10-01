@@ -1,4 +1,3 @@
-# views/usuarios.py
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from models import db, Usuario
 from forms.usuario_form import UsuarioForm
@@ -6,18 +5,14 @@ from utils.decorators import admin_required
 
 usuarios_bp = Blueprint('usuarios', __name__, url_prefix='/usuarios')
 
-@usuarios_bp.route('/gestion')
-@admin_required
-def gestion():
-    usuarios = Usuario.query.all()
-    return render_template('usuarios/gestion.html', usuarios=usuarios)
-
 @usuarios_bp.route('/')
+@admin_required
 def listar_usuarios():
     usuarios = Usuario.query.all()
     return render_template('usuarios/listar.html', usuarios=usuarios)
 
 @usuarios_bp.route('/nuevo', methods=['GET', 'POST'])
+@admin_required
 def nuevo_usuario():
     form = UsuarioForm()
     if form.validate_on_submit():
@@ -32,8 +27,9 @@ def nuevo_usuario():
         return redirect(url_for('usuarios.listar_usuarios'))
     return render_template('usuarios/nuevo.html', form=form)
 
-@usuarios_bp.route('/editar/<int:id>', methods=['GET', 'POST'])
-def editar_usuario(id):
+@usuarios_bp.route('/gestion/<int:id>', methods=['GET', 'POST'])  # ✅ ahora recibe un ID
+@admin_required
+def gestion(id):
     usuario = Usuario.query.get_or_404(id)
     form = UsuarioForm(obj=usuario)
     if form.validate_on_submit():
@@ -41,11 +37,12 @@ def editar_usuario(id):
         usuario.email = form.email.data
         usuario.rol = form.rol.data
         db.session.commit()
-        flash('Usuario actualizado', 'success')
+        flash('Usuario actualizado correctamente', 'success')
         return redirect(url_for('usuarios.listar_usuarios'))
-    return render_template('usuarios/editar.html', form=form)
+    return render_template('usuarios/gestion.html', form=form, usuario=usuario)  # ✅ ahora envía usuario
 
 @usuarios_bp.route('/eliminar/<int:id>', methods=['POST'])
+@admin_required
 def eliminar_usuario(id):
     usuario = Usuario.query.get_or_404(id)
     db.session.delete(usuario)

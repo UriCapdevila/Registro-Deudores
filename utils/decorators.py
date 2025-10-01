@@ -8,7 +8,7 @@ def admin_required(f):
     def decorated_function(*args, **kwargs):
         if not current_user.is_authenticated or current_user.rol != 'admin':
             flash('Acceso restringido: solo administradores', 'danger')
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('dashboard.dashboard'))  # ✅ corregido
         return f(*args, **kwargs)
     return decorated_function
 
@@ -19,8 +19,7 @@ def rol_required(rol):
         def decorated_function(*args, **kwargs):
             if not current_user.is_authenticated or current_user.rol != rol:
                 flash(f'Acceso restringido a usuarios con rol: {rol}', 'danger')
-                return redirect(url_for('dashboard'))
+                return redirect(url_for('dashboard.dashboard'))
             return f(*args, **kwargs)
         return decorated_function
     return wrapper
-

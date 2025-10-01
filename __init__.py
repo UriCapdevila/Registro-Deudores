@@ -1,10 +1,10 @@
 from flask import Flask
-from extensions import login_manager
+from extensions import db, login_manager
 from utils.filters import formatear_fecha, calcular_total_pagos, estado_pago
-from extensions import db
 from config import Config
 from sqlalchemy import text
 from flask_debugtoolbar import DebugToolbarExtension
+
 toolbar = DebugToolbarExtension()
 
 def create_app():
@@ -13,11 +13,16 @@ def create_app():
 
     # 🔧 Inicializar extensiones
     db.init_app(app)
+    login_manager.init_app(app)  # ✅ Faltaba esta línea
     toolbar.init_app(app)
+
+    # 🔐 Configuración de Flask-Login
+    login_manager.login_view = 'auth.login'  # Redirección si no está logueado
+    login_manager.login_message = 'Debés iniciar sesión para acceder a esta vista'
 
     # 🎨 Filtros personalizados
     app.jinja_env.filters['formatear_fecha'] = formatear_fecha
-    
+
     # 🧠 Funciones globales para Jinja
     app.jinja_env.globals['estado_pago'] = estado_pago
     app.jinja_env.globals['calcular_total_pagos'] = calcular_total_pagos

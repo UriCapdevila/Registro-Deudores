@@ -23,20 +23,20 @@
     {{ form.hidden_tag() }}
 
     <label for="nombre">{{ form.nombre.label }}</label>
-    {{ form.nombre(id="nombre", value=usuario.nombre) }}
+    {{ form.nombre(id="nombre") }}
     {% if form.nombre.errors %}
         <p class="error">{{ form.nombre.errors[0] }}</p>
     {% endif %}
 
     <label for="email">{{ form.email.label }}</label>
-    {{ form.email(id="email", value=usuario.email) }}
+    {{ form.email(id="email") }}
     {% if form.email.errors %}
         <p class="error">{{ form.email.errors[0] }}</p>
     {% endif %}
 
     {% if session.get('rol') == 'admin' %}
         <label for="rol">{{ form.rol.label }}</label>
-        {{ form.rol(id="rol", value=usuario.rol) }}
+        {{ form.rol(id="rol") }}
         {% if form.rol.errors %}
             <p class="error">{{ form.rol.errors[0] }}</p>
         {% endif %}
