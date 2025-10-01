@@ -1,4 +1,5 @@
 from flask import Flask
+from extensions import login_manager
 from utils.filters import formatear_fecha, calcular_total_pagos, estado_pago
 from extensions import db
 from config import Config
