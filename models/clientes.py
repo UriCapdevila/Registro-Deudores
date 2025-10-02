@@ -6,8 +6,10 @@ class Cliente(db.Model):
     id_cliente = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False)
     dni = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(100))  # ← nuevo campo
     direccion = db.Column(db.String(150))
     telefono = db.Column(db.String(20))
+    observaciones = db.Column(db.Text)  # ← nuevo campo
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id_usuario', ondelete='CASCADE'), nullable=False)
 
     usuario = db.relationship('Usuario', back_populates='clientes', lazy=True)

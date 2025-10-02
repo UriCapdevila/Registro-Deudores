@@ -17,8 +17,10 @@ def mostrar_clientes():
         nuevo_cliente = Cliente(
             nombre=form.nombre.data,
             dni=form.dni.data,
+            email=form.email.data,
             direccion=form.direccion.data,
             telefono=form.telefono.data,
+            observaciones=form.observaciones.data,
             usuario_id=session['id_usuario']
         )
         db.session.add(nuevo_cliente)
@@ -47,8 +49,10 @@ def editar_cliente(id):
     if form.validate_on_submit():
         cliente.nombre = form.nombre.data
         cliente.dni = form.dni.data
+        cliente.email = form.email.data
         cliente.direccion = form.direccion.data
         cliente.telefono = form.telefono.data
+        cliente.observaciones = form.observaciones.data
         db.session.commit()
         flash('Cliente actualizado correctamente')
         return redirect(url_for('clientes.mostrar_clientes'))
