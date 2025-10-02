@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de precios</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='pdf.css') }}">
+</head>
+<body>
+    <header>
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+        <div class="fecha">Generado el {{ current_date }}</div>
+    </header>
+
+    <h1>Lista de precios</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+            <tr>
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.descripcion }}</td>
+                <td>${{ "%.2f"|format(producto.precio) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <footer>
+        Documento generado automáticamente desde el sistema de gestión de productos.
+    </footer>
+</body>
+</html>

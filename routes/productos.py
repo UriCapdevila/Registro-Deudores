@@ -1,14 +1,15 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, session
+from flask import Blueprint, render_template, redirect, url_for, flash, session, make_response
 from forms.productos_forms import ProductoForm
 from forms.auth_forms import ConfirmarLogoutForm  # ✅ CSRF para eliminar
 from models import db, Producto
+import pdfkit  # ✅ Usamos pdfkit en lugar de WeasyPrint
 
 productos_bp = Blueprint('productos', __name__)
 
 @productos_bp.route('/productos', methods=['GET', 'POST'])  # ✅ acepta POST
 def mostrar_productos():
     if 'id_usuario' not in session:
-        flash('Debés iniciar sesión para ver tus productos')
+        flash('Debés iniciar sesión para ver tus productos', 'warning')
         return redirect(url_for('auth.login'))
 
     form_agregar = ProductoForm()
@@ -30,10 +31,10 @@ def mostrar_productos():
             )
             db.session.add(nuevo_producto)
             db.session.commit()
-            flash('Producto agregado correctamente')
+            flash('Producto agregado correctamente', 'success')
         except Exception as e:
             db.session.rollback()
-            flash(f'Error al registrar producto: {e}')
+            flash(f'Error al registrar producto: {e}', 'danger')
 
         return redirect(url_for('productos.mostrar_productos'))
 
@@ -50,13 +51,13 @@ def mostrar_productos():
 @productos_bp.route('/productos/editar/<int:id>', methods=['GET', 'POST'])
 def editar_producto(id):
     if 'id_usuario' not in session:
-        flash('Debés iniciar sesión para editar productos')
+        flash('Debés iniciar sesión para editar productos', 'warning')
         return redirect(url_for('auth.login'))
 
     producto = Producto.query.filter_by(id_producto=id, usuario_id=session['id_usuario']).first()
 
     if not producto:
-        flash('Producto no encontrado o no autorizado')
+        flash('Producto no encontrado o no autorizado', 'danger')
         return redirect(url_for('productos.mostrar_productos'))
 
     form = ProductoForm(obj=producto)
@@ -72,10 +73,10 @@ def editar_producto(id):
             producto.descripcion = form.descripcion.data
 
             db.session.commit()
-            flash('Producto actualizado correctamente')
+            flash('Producto actualizado correctamente', 'success')
         except Exception as e:
             db.session.rollback()
-            flash(f'Error al actualizar producto: {e}')
+            flash(f'Error al actualizar producto: {e}', 'danger')
 
         return redirect(url_for('productos.mostrar_productos'))
 
@@ -84,7 +85,7 @@ def editar_producto(id):
 @productos_bp.route('/productos/eliminar/<int:id>', methods=['POST'])
 def eliminar_producto(id):
     if 'id_usuario' not in session:
-        flash('Debés iniciar sesión para eliminar productos')
+        flash('Debés iniciar sesión para eliminar productos', 'warning')
         return redirect(url_for('auth.login'))
 
     producto = Producto.query.filter_by(id_producto=id, usuario_id=session['id_usuario']).first()
@@ -92,8 +93,19 @@ def eliminar_producto(id):
     if producto:
         db.session.delete(producto)
         db.session.commit()
-        flash('Producto eliminado correctamente')
+        flash('Producto eliminado correctamente', 'success')
     else:
-        flash('Producto no encontrado o no autorizado')
+        flash('Producto no encontrado o no autorizado', 'danger')
 
     return redirect(url_for('productos.mostrar_productos'))
+
+@productos_bp.route('/productos/pdf')
+def generar_pdf_productos():
+    productos = Producto.query.filter_by(usuario_id=session['id_usuario']).all()
+    html = render_template('productos/pdf_lista.html', productos=productos)
+    pdf = pdfkit.from_string(html, False)
+
+    response = make_response(pdf)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename=lista_precios.pdf'
+    return response
