@@ -2,6 +2,10 @@
 
 {% block title %}Confirmar cierre de sesión{% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="logout-confirm-container">
     <h2>¿Estás seguro de que querés cerrar sesión?</h2>

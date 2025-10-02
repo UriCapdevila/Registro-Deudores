@@ -1,101 +1,111 @@
 /* === FORMULARIO DE PRODUCTOS === */
+/* Contenedor visual para el formulario de carga de productos */
 .form-agregar-producto {
-    background-color: #ffffff;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.05);
-    display: grid;
-    gap: 1rem;
-    max-width: 600px;
-    margin-bottom: 2rem;
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  display: grid;
+  gap: 1rem;
+  max-width: 600px;
+  margin-bottom: 2rem;
 }
 
+/* Asegura que los campos ocupen el ancho completo dentro del formulario */
 .form-agregar-producto input,
 .form-agregar-producto textarea {
-    width: 100%;
+  width: 100%;
 }
 
 /* === TABLA DE PRODUCTOS === */
+/* Estilo específico para la tabla de productos */
 .tabla-productos {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
 }
 
+/* Celdas con espaciado y borde suave */
 .tabla-productos th,
 .tabla-productos td {
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    text-align: left;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  text-align: left;
 }
 
+/* Encabezado con fondo diferenciado */
 .tabla-productos th {
-    background-color: #f0f4ff;
-    font-weight: bold;
+  background-color: #f0f4ff;
+  font-weight: bold;
 }
 
+/* Alternancia de filas para mejor legibilidad */
 .tabla-productos tr:nth-child(even) {
-    background-color: #f9f9f9;
+  background-color: #f9f9f9;
 }
 
-/* === BOTONES DE ACCIÓN === */
+/* === ENLACES DE ACCIÓN EN TABLA === */
+/* Estilo para enlaces como "Editar" o "Ver" dentro de la tabla */
 .tabla-productos a {
-    color: #2980b9;
-    text-decoration: none;
-    font-weight: bold;
+  color: #2980b9;
+  text-decoration: none;
+  font-weight: bold;
 }
 
 .tabla-productos a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
+/* === BOTÓN DE ELIMINAR === */
+/* Botón rojo para eliminar productos */
 .btn-eliminar {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 0.4rem 0.8rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
 }
 
 .btn-eliminar:hover {
-    background-color: #c0392b;
+  background-color: #c0392b;
 }
 
-/* === RESPONSIVE === */
+/* === RESPONSIVE PARA TABLA DE PRODUCTOS === */
+/* Adaptación de la tabla para pantallas pequeñas */
 @media (max-width: 768px) {
-    .form-agregar-producto {
-        padding: 1rem;
-    }
+  .form-agregar-producto {
+    padding: 1rem;
+  }
 
-    .tabla-productos,
-    .tabla-productos thead,
-    .tabla-productos tbody,
-    .tabla-productos th,
-    .tabla-productos td,
-    .tabla-productos tr {
-        display: block;
-    }
+  .tabla-productos,
+  .tabla-productos thead,
+  .tabla-productos tbody,
+  .tabla-productos th,
+  .tabla-productos td,
+  .tabla-productos tr {
+    display: block;
+  }
 
-    .tabla-productos th {
-        display: none;
-    }
+  .tabla-productos th {
+    display: none;
+  }
 
-    .tabla-productos td {
-        position: relative;
-        padding-left: 50%;
-    }
+  .tabla-productos td {
+    position: relative;
+    padding-left: 50%;
+  }
 
-    .tabla-productos td::before {
-        content: attr(data-label);
-        position: absolute;
-        left: 0;
-        top: 0;
-        padding: 0.75rem;
-        font-weight: bold;
-        background-color: #ecf0f1;
-        width: 45%;
-        border-right: 1px solid #ddd;
-    }
+  .tabla-productos td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 0.75rem;
+    font-weight: bold;
+    background-color: #ecf0f1;
+    width: 45%;
+    border-right: 1px solid #ddd;
+  }
 }

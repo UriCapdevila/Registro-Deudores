@@ -34,6 +34,12 @@
 </form>
 
 <h2>Listado de productos</h2>
+
+<!-- Botón de impresión fuera de la tabla! -->
+<a href="{{ url_for('productos.generar_pdf_productos') }}" target="_blank" class="btn btn-secondary">
+    Imprimir lista de precios
+</a>
+
 <table class="tabla-productos">
     <thead>
         <tr>
@@ -46,10 +52,6 @@
         </tr>
     </thead>
     <tbody>
-
-        <a href="{{ url_for('productos.generar_pdf_productos') }}" target="_blank" class="btn btn-secondary">
-    Imprimir lista de precios
-        </a>
         {% for producto in productos %}
         <tr>
             <td>{{ producto.nombre }}</td>

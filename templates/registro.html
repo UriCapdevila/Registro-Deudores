@@ -2,6 +2,10 @@
 
 {% block title %}Registro de usuario{% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="login-container">
     <h2>Crear nueva cuenta</h2>
