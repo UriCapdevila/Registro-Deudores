@@ -53,7 +53,7 @@ def editar_cliente(id):
         flash('Cliente actualizado correctamente')
         return redirect(url_for('clientes.mostrar_clientes'))
 
-    return render_template('clientes/editar.html', form=form, cliente=cliente)
+    return render_template('clientes/editar_cliente.html', form=form, cliente=cliente)
 
 @clientes_bp.route('/clientes/eliminar/<int:id>', methods=['POST'])
 def eliminar_cliente(id):
