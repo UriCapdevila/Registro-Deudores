@@ -3,8 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Panel{% endblock %}</title>
+
+    <!-- Estilos base globales -->
     <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+
+    <!-- Ícono del sitio -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+
+    <!-- Estilos modulares por componente -->
     {% block extra_head %}{% endblock %}
 </head>
 <body>
@@ -27,11 +33,12 @@
     </header>
 
     <main class="main-panel container">
-        {% with messages = get_flashed_messages() %}
+        <!-- ✅ Mensajes flash con categorías -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <ul class="flash-messages">
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
+                    {% for category, message in messages %}
+                        <li class="flash-{{ category }}">{{ message }}</li>
                     {% endfor %}
                 </ul>
             {% endif %}

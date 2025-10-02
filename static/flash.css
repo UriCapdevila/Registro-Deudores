@@ -1,0 +1,48 @@
+/* === MENSAJES FLASH === */
+/* Contenedor general para lista de mensajes */
+.flash-messages {
+  list-style: none;
+  margin-bottom: 1rem;
+  padding: 0;
+}
+
+/* Estilo base para cada mensaje */
+.flash-messages li {
+  padding: 0.75rem 1rem;
+  border-radius: 5px;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  animation: fadeIn 0.5s ease-in-out;
+  font-weight: 500;
+}
+
+/* === TIPOS DE MENSAJE === */
+/* Éxito: verde suave */
+.flash-success {
+  background-color: #dff0d8;
+  color: #3c763d;
+}
+
+/* Error: rojo suave */
+.flash-error {
+  background-color: #f2dede;
+  color: #a94442;
+}
+
+/* Advertencia: amarillo suave */
+.flash-warning {
+  background-color: #fcf8e3;
+  color: #8a6d3b;
+}
+
+/* Información: azul suave */
+.flash-info {
+  background-color: #d9edf7;
+  color: #31708f;
+}
+
+/* === ANIMACIÓN DE ENTRADA === */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}

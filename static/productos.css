@@ -109,3 +109,21 @@
     border-right: 1px solid #ddd;
   }
 }
+
+/* === BOTÓN DE IMPRESIÓN === */
+/* Estilo visual para el botón de imprimir PDF */
+.btn-imprimir {
+  display: inline-block;
+  background-color: #1abc9c;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 0.3s;
+  margin-bottom: 1rem;
+}
+
+.btn-imprimir:hover {
+  background-color: #16a085;
+}

@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Lista de precios</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='pdf.css') }}">
+    <!-- ✅ No se incluye pdf.css aquí, se aplica desde Flask -->
 </head>
 <body>
     <header>
-        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
-        <div class="fecha">Generado el {{ current_date }}</div>
+        <!-- ✅ Logo referenciado por ruta absoluta desde Flask -->
+        <img src="{{ logo_path }}" alt="Logo" style="height: 60px;">
     </header>
 
     <h1>Lista de precios</h1>
@@ -25,7 +25,7 @@
             {% for producto in productos %}
             <tr>
                 <td>{{ producto.nombre }}</td>
-                <td>{{ producto.descripcion }}</td>
+                <td>{{ producto.descripcion or '—' }}</td>
                 <td>${{ "%.2f"|format(producto.precio) }}</td>
             </tr>
             {% endfor %}

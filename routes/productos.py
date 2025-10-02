@@ -3,6 +3,9 @@ from forms.productos_forms import ProductoForm
 from forms.auth_forms import ConfirmarLogoutForm  # ✅ CSRF para eliminar
 from models import db, Producto
 import pdfkit  # ✅ Usamos pdfkit en lugar de WeasyPrint
+import os
+from flask import current_app
+
 
 productos_bp = Blueprint('productos', __name__)
 
@@ -101,9 +104,24 @@ def eliminar_producto(id):
 
 @productos_bp.route('/productos/pdf')
 def generar_pdf_productos():
+    if 'id_usuario' not in session:
+        flash('Debés iniciar sesión para generar el PDF', 'warning')
+        return redirect(url_for('auth.login'))
+
     productos = Producto.query.filter_by(usuario_id=session['id_usuario']).all()
-    html = render_template('productos/pdf_lista.html', productos=productos)
-    pdf = pdfkit.from_string(html, False)
+
+    logo_path = os.path.join(current_app.root_path, 'static', 'logo.png')
+
+    # ✅ Ruta absoluta al archivo CSS
+    css_path = os.path.join(current_app.root_path, 'static', 'pdf.css')
+    # ✅ Renderizar HTML como string
+    html = render_template('productos/pdf_lista.html', productos=productos, logo_path=f"file://{logo_path}")
+    # ✅ Opciones para permitir acceso a archivos locales
+    options = {
+        'enable-local-file-access': None
+    }
+    # ✅ Generar PDF desde HTML con estilo aplicado
+    pdf = pdfkit.from_string(html, False, options=options, css=css_path)
 
     response = make_response(pdf)
     response.headers['Content-Type'] = 'application/pdf'
