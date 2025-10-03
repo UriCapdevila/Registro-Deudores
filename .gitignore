@@ -1,0 +1,27 @@
+# === 🔐 Seguridad ===
+.env
+
+# === 🐍 Python ===
+__pycache__/
+*.py[cod]
+*.log
+
+# === 📦 Entornos virtuales ===
+venv/
+env/
+
+# === 🧾 Archivos PDF generados ===
+*.pdf
+
+# === ⚙️ Configuración de IDEs ===
+.vscode/
+.idea/
+
+# === 🧪 Archivos temporales ===
+*.swp
+*.bak
+*.tmp
+
+# === 📄 Archivos de sistema ===
+.DS_Store
+Thumbs.db
